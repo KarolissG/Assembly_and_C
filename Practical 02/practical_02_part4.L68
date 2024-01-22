@@ -1,0 +1,58 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 22/01/2024 16:23:21
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :Karolis Grigaliunas
+00000000                             4  * Date       :
+00000000                             5  * Description: Show memory overwriting
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9  
+00001000  7013                      10          MOVE.L #%10011,   D0  ;binary 13 in hex
+00001002  223C A3F843A1             11          MOVE.L #$A3F843A1,   D1  ;hex
+00001008  243C 00000100             12          MOVE.L #256,    D2  ;decimal 100 in hex
+0000100E                            13          
+0000100E  21C0 3000                 14          MOVE.L D0,  $3000   ;moving data in registers D0-2 to memory
+00001012  21C1 3010                 15          MOVE.L D1,  $3010
+00001016  21C2 3020                 16          MOVE.L D2,  $3020
+0000101A                            17          
+0000101A  163C 0080                 18          MOVE.B #128,    D3   ;decimal 80 in hex
+0000101E  183C 00AF                 19          MOVE.B #$AF,    D4   ;hex affects the long value stored in same location
+00001022  1A3C 0066                 20          MOVE.B #%1100110,    D5 ;binary 66 in hex
+00001026                            21          
+00001026  11C3 3000                 22          MOVE.B D3,  $3000   ;moving data in registers D3-5 to memory 
+0000102A  11C4 3010                 23          MOVE.B D4,  $3010
+0000102E  11C5 3020                 24          MOVE.B D5,  $3020
+00001032                            25          
+00001032  2C38 3010                 26          MOVE.L $3010,   D6
+00001036                            27          
+00001036  31FC 0063 3000            28          MOVE.W #99,    $3000   ;decimal 63 in hex   
+0000103C  31FC 00C4 3010            29          MOVE.W #$C4,    $3010  ;hex put into memory
+00001042  31FC 0016 3020            30          MOVE.W #%10110,    $3020  ;binary 16 in hex
+00001048                            31                              ;moving data straight to memory
+00001048                            32                              ;this overwrites the byte data
+00001048                            33                              
+00001048  21FC 00000038 3000        34          MOVE.L #56, $3000   ;decimal 38 in hex
+00001050  21FC 0000008E 3010        35          MOVE.L #$8E,    $3010
+00001058  21FC 000000F0 3020        36          MOVE.L #%11110000,  $3020   ;binary F0 in hex
+00001060                            37          ;LONG DATA OVERWRITES MEMORY LOCATION FULLY
+00001060                            38  
+00001060                            39          
+00001060                            40  
+00001060  FFFF FFFF                 41      SIMHALT             ; halt simulator
+00001064                            42  
+00001064                            43  * Put variables and constants here
+00001064                            44  
+00001064                            45      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+START               1000
