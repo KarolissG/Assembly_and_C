@@ -1,0 +1,30 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 29/01/2024 15:59:56
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  
+00001000                             9  
+00001000  47F9 0000100E             10      LEA HEALTH, A3      ;Puts the address of HEALTH into A3 
+00001006  0413 000A                 11      SUB.B #10,  (A3)    ;Subtracts 10 from the value stored in addressof (A3)
+0000100A                            12                                                    
+0000100A  FFFF FFFF                 13      SIMHALT            
+0000100E                            14  
+0000100E= 64                        15  HEALTH dc.b $64         ;Declares a byte value HEALTH variable of hex value 64
+0000100F                            16      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+HEALTH              100E
+START               1000

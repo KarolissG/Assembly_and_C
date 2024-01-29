@@ -1,0 +1,32 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 29/01/2024 15:41:39
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  
+00001000                             9  
+00001000  45F8 4000                 10      LEA $4000, A2       ;Saves effective address $4000 into A1
+00001004  14BC 0064                 11      MOVE.B #100, (A2)   ;Moves decimal 100 into address location $4000
+00001008                            12                          ;brackets tell us to go to the address
+00001008                            13                          
+00001008  0412 000A                 14      SUB.B #10,  (A2)
+0000100C                            15                          
+0000100C  FFFF FFFF                 16      SIMHALT            
+00001010                            17  
+00001010                            18  
+00001010                            19      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+START               1000
