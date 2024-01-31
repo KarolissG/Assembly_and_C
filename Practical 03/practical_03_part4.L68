@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 29/01/2024 16:49:11
+Created On: 31/01/2024 10:41:29
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -11,32 +11,44 @@ Created On: 29/01/2024 16:49:11
 00001000                             7      ORG    $1000
 00001000                             8  START:                  
 00001000                             9  
-00001000  43F9 00001040             10      LEA HEALTH, A1      ;Puts the address of HEALTH into A1
-00001006  45F9 00001041             11      LEA POINTS, A2
-0000100C  47F9 00001042             12      LEA MONEY,  A3
-00001012  49F9 00001044             13      LEA HUNGER, A4
-00001018  4BF9 00001046             14      LEA STAMINA,A5
-0000101E  4DF9 00001048             15      LEA BOUNTY, A6
+00001000  43F9 00001050             10      LEA HEALTH, A1      ;save all declared values into address registers
+00001006  45F9 00001051             11      LEA POINTS, A2
+0000100C  47F9 00001052             12      LEA MONEY,  A3
+00001012  49F9 00001054             13      LEA HUNGER, A4
+00001018  4BF9 00001056             14      LEA STAMINA,A5
+0000101E  4DF9 00001058             15      LEA DEBT,   A6
 00001024                            16      
 00001024                            17      
-00001024  0455 0064                 18      SUB.W #100,  (A5)   ;-10 STAMINA
+00001024  0455 0064                 18      SUB.W #100, (A5)    ;-10 STAMINA
 00001028  0411 000A                 19      SUB.B #10,  (A1)    ;-10 HEALTH
 0000102C  5714                      20      SUB.B #3,   (A4)    ;-3 HUNGER
-0000102E  0611 000A                 21      ADD.B #10,   (A1)    ;+10 HEALTH
+0000102E  0611 000A                 21      ADD.B #10,  (A1)    ;+10 HEALTH
 00001032  0453 2710                 22      SUB.W #10000,(A3)   ;-10,000 MONEY
 00001036  0496 00002710             23      SUB.L #10000,(A6)   ;-10,000 BOUNTY
-0000103C                            24      
-0000103C                            25      
-0000103C                            26                                                    
-0000103C  FFFF FFFF                 27      SIMHALT            
-00001040                            28  
-00001040= 64                        29  HEALTH  dc.b $64         ;Declares a byte value HEALTH variable of hex value 64
-00001041= 00                        30  POINTS  dc.b $00         ;declare points byte as hex 0
-00001042= 2AC6                      31  MONEY   dc.w $2AC6       ;declare money as word 2AC6 in hex (10,950)in decimal
-00001044= 24                        32  HUNGER  dc.b $24         ;declare hunger as byte hex 24
-00001046= 0315                      33  STAMINA dc.w $315        ;declare stamina as hex 315 (789) in decimal
-00001048= 000F4240                  34  BOUNTY  dc.l $F4240      ;declare bounty as hex F4240 (1 mil) in decimal
-0000104C                            35      END    START        ; last line of source
+0000103C  0612 0019                 24      ADD.B #25,  (A2)    ;+25 POINTS
+00001040                            25      
+00001040                            26      
+00001040                            27                          ;MOVE UPDATED VALUES INTO DATA REGISTERS
+00001040  1012                      28      MOVE.B (A2),D0      ;POINTS
+00001042  1211                      29      MOVE.B (A1),D1      ;HEALTH
+00001044  3415                      30      MOVE.W (A5),D2      ;STAMINA
+00001046  1614                      31      MOVE.B (A4),D3      ;HUNGER
+00001048  3813                      32      MOVE.W (A3),D4      ;MONEY
+0000104A  2A16                      33      MOVE.L (A6),D5      ;DEBT
+0000104C                            34      
+0000104C                            35      
+0000104C                            36      
+0000104C                            37      
+0000104C                            38                                                    
+0000104C  FFFF FFFF                 39      SIMHALT            
+00001050                            40  
+00001050= 64                        41  HEALTH  dc.b $64        ;Declares a byte value HEALTH variable of hex value 64
+00001051= 00                        42  POINTS  dc.b $00        ;declare points byte as hex 0
+00001052= 2AC6                      43  MONEY   dc.w $2AC6      ;declare money as word 2AC6 in hex (10,950)in decimal
+00001054= 24                        44  HUNGER  dc.b $24        ;declare hunger as byte hex 24
+00001056= 0315                      45  STAMINA dc.w $315       ;declare stamina as hex 315 (789) in decimal
+00001058= 000F4240                  46  DEBT  dc.l $F4240       ;declare debt as hex F4240 (1 mil) in decimal
+0000105C                            47      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -45,10 +57,10 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-BOUNTY              1048
-HEALTH              1040
-HUNGER              1044
-MONEY               1042
-POINTS              1041
-STAMINA             1046
+DEBT                1058
+HEALTH              1050
+HUNGER              1054
+MONEY               1052
+POINTS              1051
+STAMINA             1056
 START               1000
