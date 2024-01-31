@@ -20,7 +20,7 @@ START:
     SUB.B #3,   (A4)    ;-3 HUNGER
     ADD.B #10,  (A1)    ;+10 HEALTH
     SUB.W #10000,(A3)   ;-10,000 MONEY
-    SUB.L #10000,(A6)   ;-10,000 BOUNTY
+    SUB.L #10000,(A6)   ;-10,000 DEBT
     ADD.B #25,  (A2)    ;+25 POINTS
     
     
