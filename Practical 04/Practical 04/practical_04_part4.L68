@@ -1,0 +1,73 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 07/02/2024 13:43:53
+
+00000000                             1  
+00001000                             2      ORG    $1000
+00001000                             3  START:             
+00001000                             4      ;MOVE HEALTH TO MEMORY $3000
+00001000  11FC 0064 3000             5      MOVE.B  #$64,   $3000  
+00001006                             6      
+00001006  11FC 00C8 4000             7      MOVE.B  #200,   $4000   ;BOSS HEALTH
+0000100C                             8       
+0000100C                             9      ;LOAD MEMORY ADDRESS $3000 INTO REGISTER A1
+0000100C  43F8 3000                 10      LEA     $3000,  A1 
+00001010  49F8 4000                 11      LEA     $4000,  A4
+00001014  45F9 00001066             12      LEA     STRENGTH,   A2
+0000101A  47F9 00001067             13      LEA     POSITION,   A3
+00001020                            14      
+00001020  1212                      15      MOVE.B  (A2),D1
+00001022  6100 0002                 16      BSR     BATTLE
+00001026                            17     
+00001026                            18  BATTLE:
+00001026  6100 0024                 19      BSR ATTACK
+0000102A  6100 0020                 20      BSR ATTACK
+0000102E  6100 001C                 21      BSR ATTACK
+00001032  6100 000E                 22      BSR HEAL_UP
+00001036  6100 0014                 23      BSR ATTACK
+0000103A  0612 0017                 24      ADD.B   #23,    (A2)
+0000103E  6000 001A                 25      BRA LOOT
+00001042                            26      
+00001042                            27  HEAL_UP:
+00001042  5313                      28      SUB.B   #1,   (A3)
+00001044  6100 000E                 29      BSR     HEALTH_PICKUP
+00001048  5213                      30      ADD.B   #1,   (A3)
+0000104A  4E75                      31      RTS
+0000104C                            32        
+0000104C                            33  ATTACK: 
+0000104C                            34      ;HIT BY BOSS -20 HP
+0000104C  0411 0014                 35      SUB.B   #20,    (A1)
+00001050  9314                      36      SUB.B   D1,  (A4)  
+00001052  4E75                      37      RTS
+00001054                            38     
+00001054                            39  HEALTH_PICKUP:
+00001054                            40      ;PICK UP HEALTH +10 HP 
+00001054  0611 0032                 41      ADD.B   #50,    (A1)  
+00001058  4E75                      42      RTS
+0000105A                            43  
+0000105A                            44  LOOT:
+0000105A  0612 000E                 45      ADD.B   #14,    (A2)
+0000105E  12B8 0064                 46      MOVE.B  $64,    (A1)
+00001062                            47  
+00001062  FFFF FFFF                 48      SIMHALT       
+00001066= 32                        49  STRENGTH    DC.B    $32 
+00001067= 11                        50  POSITION    DC.B    $11  
+00001068                            51     
+00001068                            52      
+00001068                            53      END    START        
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ATTACK              104C
+BATTLE              1026
+HEALTH_PICKUP       1054
+HEAL_UP             1042
+LOOT                105A
+POSITION            1067
+START               1000
+STRENGTH            1066

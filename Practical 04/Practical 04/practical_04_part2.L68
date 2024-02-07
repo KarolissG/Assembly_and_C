@@ -1,0 +1,41 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 02/02/2024 12:35:05
+
+00000000                             1  
+00001000                             2      ORG    $1000
+00001000                             3  START:             
+00001000                             4      ;MOVE HEALTH TO MEMORY $3000
+00001000  11FC 0064 3000             5      MOVE.B  #100,   $3000   
+00001006                             6      
+00001006                             7      ;X AND Y POS OF PLAYER - X= FIRST BYTE Y=SECOND BYTE
+00001006  143C 0012                  8      MOVE.B  #$12,   D2
+0000100A                             9      
+0000100A                            10      ;X AND Y POS OF NPC - X= FIRST BYTE Y=SECOND BYTE
+0000100A  163C 0022                 11      MOVE.B  #$22,   D3
+0000100E                            12      
+0000100E                            13      ;AND D2 and  D3
+0000100E  C602                      14      AND.B   D2, D3
+00001010                            15      
+00001010                            16      ;LOAD MEMORY ADDRESS $3000 INTO REGISTER A1
+00001010  43F8 3000                 17      LEA     $3000,  A1 
+00001014                            18       
+00001014                            19      ;HIT BY NPC -20 HP
+00001014  0411 0014                 20      SUB.B   #20,    (A1)
+00001018                            21      
+00001018                            22      ;PICK UP HEALTH PACH +10 HP 
+00001018  0611 000A                 23      ADD.B   #10,    (A1)   
+0000101C                            24  
+0000101C                            25  
+0000101C  FFFF FFFF                 26      SIMHALT            
+00001020                            27      
+00001020                            28      END    START        
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+START               1000
