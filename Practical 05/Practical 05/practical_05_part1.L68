@@ -1,0 +1,41 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 12/02/2024 15:45:12
+
+00000000                             1  
+00001000                             2      ORG    $1000
+00001000                             3  START:                  ; first instruction of program
+00001000                             4  
+00001000                             5  INITIALIZE:
+00001000  103C 0003                  6      MOVE.B  #3, D0
+00001004  123C 0000                  7      MOVE.B  #0, D1
+00001008                             8  
+00001008                             9  GAME_LOOP:
+00001008  B03C 0001                 10      CMP.B   #1, D0  ;COMPARE #1 TO VALUE IN D0
+0000100C  6600 0006                 11      BNE GAME_POINTS ;IF Not Equal BRANCH INTO GAME_POINTS
+00001010  6700 000A                 12      BEQ GAME_OVER   ;IF EQual BRANCH INTO GAME_OVER
+00001014                            13  GAME_POINTS:
+00001014  0601 000A                 14      ADD.B   #10,    D1
+00001018  5300                      15      SUB.B   #1, D0
+0000101A  60EC                      16      BRA     GAME_LOOP
+0000101C                            17      
+0000101C                            18  GAME_OVER:
+0000101C                            19  
+0000101C  FFFF FFFF                 20      SIMHALT             ; halt simulator
+00001020                            21  
+00001020                            22  * Put variables and constants here
+00001020                            23  
+00001020                            24      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+GAME_LOOP           1008
+GAME_OVER           101C
+GAME_POINTS         1014
+INITIALIZE          1000
+START               1000

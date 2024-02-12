@@ -1,0 +1,48 @@
+
+    ORG    $1000
+DAMAGE  EQU 100
+START:                  ; first instruction of program
+
+GAME_LOOP:
+    LEA MSG_GAME_LOOP,    A1
+    MOVE.B  #13, D0 
+    TRAP    #15
+    CMP.B   #0, PLAYER_HEALTH   ;COMPARE #0 TO PLAYER_HEALTH
+    BEQ GAME_OVER      ;IF EQUAL BRANCH TO GAME_OVER
+    BSR UPDATE  ;BRANCH WITH SUBROUTINE TO UPDATE
+    BSR COLLISION_CHECK ;BRANCH INTO COLLISION_CHECK
+    BRA GAME_LOOP   ;BRANCH GAME_LOOP
+   
+UPDATE:
+    ADD.B   #1,    PLAYER_POSITION  ;ADD #1 TO PLAYER POSTION
+    RTS     ;RETURN TO SUBROUTINE
+COLLISION_CHECK:
+    MOVE.B  PLAYER_POSITION,    D1  ;MOVE PLAYER_POSITION INTO REGISTER  
+    CMP.B   D2, D1      ;COMPARE PLAYER_POSITION TO D1
+    BEQ COLLISION   ;IF D2 IS EQUAL TO D1 BRANCH INTO COLLISION
+    RTS
+    
+COLLISION:
+    SUB.B   #DAMAGE, PLAYER_HEALTH  ;DAMAGE PLAYER_HEALTH
+    BRA GAME_LOOP
+   
+GAME_OVER:
+    LEA MSG_GAME_OVER,  A1
+    MOVE.B  #13,    D0
+    TRAP    #15
+    SIMHALT             ; halt simulator
+    
+PLAYER_POSITION: DC.B   10, 15 ;DECLARE BYTE LIST
+EMEMY_POSITION: DC.B    50, 55
+PLAYER_HEALTH   DC.B    100
+
+MSG_GAME_LOOP   DC.B    'Game Loop........',0
+MSG_GAME_OVER   DC.B    'Game Over!',0
+* Put variables and constants here
+
+    END    START        ; last line of source
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
