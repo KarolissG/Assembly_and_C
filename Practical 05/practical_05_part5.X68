@@ -10,9 +10,11 @@
 ; A3 used for ENEMY POSITIONS
 
 DAMAGE  EQU 10  ; Damage when Collisions occur
+HEAL    EQU 8   ; Heal when on power up
 
 START:
-    LEA PLAYER_X, A2            ; Player will move along X axis
+    LEA PLAYER_X, A2            ; Player will move along X axis 
+    LEA POWER_UPS,  A4
     LEA ENEMY_POSITIONS, A3     ; Enemy positions or spawn points 
     BRA GAME_LOOP
     
@@ -36,7 +38,7 @@ UPDATE:
     BSR DRAW                
     CMP #0, D1              ; Check if Health is 0
     BLE GAME_OVER           ; Game Over
-    ADD.L   #1, (A2)        ; Change X position of Player
+    ADD.L   #1, PLAYER_X        ; Change X position of Player
     BSR COLLISION           ; Check for Collisions with ENEMIES
     RTS
   
@@ -72,8 +74,7 @@ REDUCE_HEALTH:
     BSR DRAW
     
     BRA GAME_LOOP
-    
- 
+
 GAME_OVER:
     LEA MSG_GAMEOVER, A1
     BSR DRAW
@@ -103,8 +104,9 @@ MSG_GAMEOVER    DC.B    'Game Over',0
 MSG_DAMAGE  DC.B        'Taking Damage',0
 CRLF    DC.B    $0D,$0A,0
 ENEMY_POSITIONS     DC.L    20, 30, 40, 50, 60, 70, 80, 90, 200, 300, 500, 0    ; Terminate Array with a 0
-
+POWER_UPS   DC.L    10, 55, 220, 0
     END START
+
 
 
 

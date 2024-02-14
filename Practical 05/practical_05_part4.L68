@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 12/02/2024 16:56:20
+Created On: 14/02/2024 10:57:10
 
 00000000                             1  
 00001000                             2      ORG $1000
@@ -55,7 +55,7 @@ Created On: 12/02/2024 16:56:20
 00001068                            51      
 00001068                            52  ITERATE:
 00001068  B845                      53      CMP D5, D4              ; Counter for ENEMY_POSITIONS
-0000106A  5305                      54      SUB.B   #1, D5          ; Subtract one
+0000106A  5205                      54      ADD.B   #1, D5          ; Subtract one
 0000106C  67A2                      55      BEQ GAME_LOOP           ; If 0 goto GAME_LOOP
 0000106E  6600 0004                 56      BNE CHECK_ENEMIES       ; If not Check for Enemy Collisions
 00001072  4E75                      57      RTS
