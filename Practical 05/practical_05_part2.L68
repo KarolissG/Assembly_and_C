@@ -1,39 +1,63 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 12/02/2024 15:40:22
+Created On: 14/02/2024 15:44:01
 
 00000000                             1  
 00001000                             2      ORG    $1000
 00001000                             3  START:                  ; first instruction of program
 00001000                             4      
-00001000  43F9 0000102A              5      LEA PLAYER_POSITION,    A1
-00001006  45F9 0000102C              6      LEA EMEMY_POSITION, A2
-0000100C                             7      
-0000100C  123C 0032                  8      MOVE.B  #50, D1
-00001010  143C 0000                  9      MOVE.B  #0, D2
-00001014                            10  
-00001014                            11  COLLISION_CHECK:
-00001014  B242                      12      CMP D2, D1
-00001016  6D00 0006                 13      BLT NEXT_MOVE
-0000101A  6700 0006                 14      BEQ COLLISION
-0000101E                            15      
-0000101E                            16  NEXT_MOVE:
-0000101E  5202                      17      ADD.B   #1,    D2
-00001020  60F2                      18      BRA COLLISION_CHECK
-00001022                            19  
-00001022                            20  
-00001022                            21  COLLISION:
-00001022  6000 0002                 22      BRA GAME_OVER
-00001026                            23      
-00001026                            24  GAME_OVER:
-00001026                            25  
-00001026  FFFF FFFF                 26      SIMHALT             ; halt simulator
-0000102A                            27      
-0000102A= 0A 0F                     28  PLAYER_POSITION: DC.B   10, 15 
-0000102C= 32 37                     29  EMEMY_POSITION: DC.B    50, 55
-0000102E                            30  * Put variables and constants here
-0000102E                            31  
-0000102E                            32      END    START        ; last line of source
+00001000  43F9 0000105A              5      LEA PLAYER_POSITION,    A1
+00001006  45F9 0000105C              6      LEA EMEMY_POSITION, A2        
+0000100C                             7      ;EMENY
+0000100C  1219                       8      MOVE.B  (A1)+,D1     ;X
+0000100E  1411                       9      MOVE.B  (A1),D2    ;Y
+00001010                            10      ;PLAYER
+00001010  161A                      11      MOVE.B  (A2)+,D3     ;X
+00001012  1812                      12      MOVE.B  (A2),D4    ;Y
+00001014                            13      
+00001014                            14  COLLISION_CHECK_X:
+00001014  B641                      15      CMP D1, D3  
+00001016  6700 0012                 16      BEQ COLLISION_CHECK_Y
+0000101A  B27C 0037                 17      CMP #55,    D1
+0000101E  6600 0026                 18      BNE ENEMY_NEXT_MOVE_X
+00001022  B67C 0037                 19      CMP #55,    D3
+00001026  6100 001A                 20      BSR PLYR_NEXT_MOVE_X   
+0000102A                            21     
+0000102A                            22      
+0000102A                            23  COLLISION_CHECK_Y:
+0000102A  B842                      24      CMP D2, D4
+0000102C  6700 0024                 25      BEQ COLLISION
+00001030  B47C 0037                 26      CMP #55,    D2
+00001034  6600 0018                 27      BNE ENEMY_NEXT_MOVE_Y
+00001038  B87C 0037                 28      CMP #55,    D4
+0000103C  6600 000C                 29      BNE PLYR_NEXT_MOVE_Y
+00001040  60D2                      30      BRA COLLISION_CHECK_X
+00001042                            31      
+00001042                            32  PLYR_NEXT_MOVE_X:
+00001042  5203                      33      ADD.B   #1, D3
+00001044  4E75                      34      RTS
+00001046                            35  ENEMY_NEXT_MOVE_X:
+00001046  5201                      36      ADD.B   #1, D1 
+00001048  4E75                      37      RTS
+0000104A                            38  PLYR_NEXT_MOVE_Y:
+0000104A  5204                      39      ADD.B   #1, D4
+0000104C  4E75                      40      RTS
+0000104E                            41  ENEMY_NEXT_MOVE_Y:
+0000104E  5202                      42      ADD.B   #1, D2
+00001050  4E75                      43      RTS
+00001052                            44     
+00001052                            45  COLLISION:
+00001052  6000 0002                 46      BRA GAME_OVER
+00001056                            47      
+00001056                            48  GAME_OVER:
+00001056                            49  
+00001056  FFFF FFFF                 50      SIMHALT             ; halt simulator
+0000105A                            51      
+0000105A= 0A 0F                     52  PLAYER_POSITION: DC.B   10, 15 ;DECLARE BYTE LIST
+0000105C= 32 37                     53  EMEMY_POSITION: DC.B    50, 55
+0000105E                            54  * Put variables and constants here
+0000105E                            55  
+0000105E                            56      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -42,10 +66,14 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-COLLISION           1022
-COLLISION_CHECK     1014
-EMEMY_POSITION      102C
-GAME_OVER           1026
-NEXT_MOVE           101E
-PLAYER_POSITION     102A
+COLLISION           1052
+COLLISION_CHECK_X   1014
+COLLISION_CHECK_Y   102A
+EMEMY_POSITION      105C
+ENEMY_NEXT_MOVE_X   1046
+ENEMY_NEXT_MOVE_Y   104E
+GAME_OVER           1056
+PLAYER_POSITION     105A
+PLYR_NEXT_MOVE_X    1042
+PLYR_NEXT_MOVE_Y    104A
 START               1000
