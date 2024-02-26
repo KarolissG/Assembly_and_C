@@ -22,10 +22,13 @@ GAME_LOOP:                    ;OFFSET BY 4 BYTES
     BRA NO_DAMAGE
    
 DAMAGE:
+    MOVEA.L 12(SP),A1
+    SUB.B   #10,    (A1)
+NO_DAMAGE:
+    RTS
+    
 HEADS_UP_DISPLAY:
-    LEA MESSAGE,    A1
-    MOVE.B  #14,    D0
-    TRAP    #15
+
     MOVE.B  HEALTH, D1
     MOVE.B  #3, D0
     TRAP    #15
@@ -36,6 +39,8 @@ END_GAME
 HEALTH: DC.B    100
   
     END START
+
+
 
 *~Font name~Courier New~
 *~Font size~10~
