@@ -1,0 +1,52 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 26/02/2024 16:20:48
+
+00001000                             1      ORG    $1000
+00001000                             2  START:                  ; first instruction of program
+00001000                             3  
+00001000  2F3C 00001044              4      MOVE.L  #HEALTH,    -(SP) ;MOVE HEALTH VALUE INTO STACK
+00001006                             5      
+00001006  103C 000E                  6      MOVE.B  #14,    D0
+0000100A  123C 000E                  7      MOVE.B  #14,    D1
+0000100E                             8      
+0000100E  2F00                       9      MOVE.L  D0,-(SP)    ;PLAYER X COORD
+00001010  2F01                      10      MOVE.L  D1,-(SP)    ;ENEMY X COORD
+00001012                            11  
+00001012  4EB9 00001020             12      JSR GAME_LOOP
+00001018  6100 0010                 13      BSR HEADS_UP_DISPLAY    
+0000101C  6000 0026                 14      BRA END 
+00001020                            15      
+00001020                            16  GAME_LOOP:                    ;OFFSET BY 4 BYTES
+00001020  226F 0004                 17      MOVEA.L 4(SP),A1          ;MOVE LONG FROM STACK TO A1
+00001024  0411 000A                 18      SUB.B   #10,    (A1)
+00001028  4E75                      19      RTS
+0000102A                            20      
+0000102A                            21  HEADS_UP_DISPLAY:
+0000102A  43F9 00001045             22      LEA MESSAGE,    A1
+00001030  103C 000E                 23      MOVE.B  #14,    D0
+00001034  4E4F                      24      TRAP    #15
+00001036  1239 00001044             25      MOVE.B  HEALTH, D1
+0000103C  103C 0003                 26      MOVE.B  #3, D0
+00001040  4E4F                      27      TRAP    #15
+00001042  4E75                      28      RTS
+00001044                            29   
+00001044                            30  END:
+00001044                            31  
+00001044= 64                        32  HEALTH: DC.B    100
+00001045= 48 45 41 4C 54 48 ...     33  MESSAGE:    DC.B    'HEALTH:',0  
+0000104D                            34      END START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+END                 1044
+GAME_LOOP           1020
+HEADS_UP_DISPLAY    102A
+HEALTH              1044
+MESSAGE             1045
+START               1000

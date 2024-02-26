@@ -1,0 +1,46 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 26/02/2024 16:02:01
+
+00001000                             1      ORG    $1000
+00001000                             2  START:                  ; first instruction of program
+00001000                             3  
+00001000  2F3C 00001038              4      MOVE.L  #HEALTH,    -(SP)
+00001006  4EB9 00001014              5      JSR GAME_LOOP
+0000100C  6100 0010                  6      BSR HEADS_UP_DISPLAY    
+00001010  6000 0026                  7      BRA END 
+00001014                             8      
+00001014                             9  GAME_LOOP:
+00001014  226F 0004                 10      MOVEA.L 4(SP),A1
+00001018  0411 000A                 11      SUB.B   #10,    (A1)
+0000101C  4E75                      12      RTS
+0000101E                            13      
+0000101E                            14  HEADS_UP_DISPLAY:
+0000101E  43F9 00001039             15      LEA MESSAGE,    A1
+00001024  103C 000E                 16      MOVE.B  #14,    D0
+00001028  4E4F                      17      TRAP    #15
+0000102A  1239 00001038             18      MOVE.B  HEALTH, D1
+00001030  103C 0003                 19      MOVE.B  #3, D0
+00001034  4E4F                      20      TRAP    #15
+00001036  4E75                      21      RTS
+00001038                            22   
+00001038                            23  END:
+00001038                            24  
+00001038= 64                        25  HEALTH: DC.B    100
+00001039= 48 45 41 4C 54 48 ...     26  MESSAGE:    DC.B    'HEALTH:',0  
+00001041                            27  
+Line 28 WARNING: END directive missing, starting address not set
+
+No errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+END                 1038
+GAME_LOOP           1014
+HEADS_UP_DISPLAY    101E
+HEALTH              1038
+MESSAGE             1039
+START               1000
