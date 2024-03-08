@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 06/03/2024 14:28:06
+Created On: 08/03/2024 06:49:31
 
 00000000                             1  
 00000000                             2  * Title      : Business Tycoon
@@ -11,22 +11,22 @@ Created On: 06/03/2024 14:28:06
 00001000                             7      ORG    $1000
 00001000                             8  START:
 00001000                             9      
-00001000  45F9 00001480             10      LEA INCOME_UPGRADE, A2
-00001006  47F9 000014C0             11      LEA LAWSUIT_SUCCESS,    A3
-0000100C  49F9 00001454             12      LEA AD_COST,    A4
-00001012  4BF9 000014CC             13      LEA TRAINING_COST,  A5
-00001018  4DF9 000014AC             14      LEA LEGAL_COST, A6
+00001000  45F9 00001538             10      LEA INCOME_UPGRADE, A2
+00001006  47F9 00001578             11      LEA LAWSUIT_SUCCESS,    A3
+0000100C  49F9 0000150C             12      LEA AD_COST,    A4
+00001012  4BF9 00001584             13      LEA TRAINING_COST,  A5
+00001018  4DF9 00001564             14      LEA LEGAL_COST, A6
 0000101E                            15      
 0000101E                            16      
 0000101E                            17  
-0000101E  43F9 0000161E             18      LEA NAME,  A1
+0000101E  43F9 0000171C             18      LEA NAME,  A1
 00001024  103C 000E                 19      MOVE.B  #14,    D0
 00001028  4E4F                      20      TRAP    #15
 0000102A  303C 0002                 21      MOVE.W  #2,  D0
 0000102E  4E4F                      22      TRAP    #15
-00001030  23C9 0000161A             23      MOVE.L  A1, NAME_ADDRESS 
+00001030  23C9 00001718             23      MOVE.L  A1, NAME_ADDRESS 
 00001036  82FC 0002                 24      DIVU    #2,D1
-0000103A  9339 000014C6             25      SUB.B   D1, BANNER_POS
+0000103A  9339 0000157E             25      SUB.B   D1, BANNER_POS
 00001040                            26     
 00001040                            27     ;REMOVE TYPING
 00001040  123C 0000                 28      MOVE.B  #0,D1
@@ -37,10 +37,10 @@ Created On: 06/03/2024 14:28:06
 0000104E  103C 0010                 33      MOVE.B  #16, D0
 00001052  4E4F                      34      TRAP #15
 00001054                            35   
-00001054  6100 02C8                 36      BSR PRINT_BANNER
+00001054  6100 0380                 36      BSR PRINT_BANNER
 00001058                            37  
 00001058                            38  LOOP:
-00001058  6100 0116                 39      BSR HUD
+00001058  6100 01CE                 39      BSR HUD
 0000105C                            40   
 0000105C  103C 0005                 41      MOVE.B  #5, D0
 00001060  4E4F                      42      TRAP #15
@@ -48,416 +48,481 @@ Created On: 06/03/2024 14:28:06
 00001062  6100 0004                 44      BSR SHOP_TEST    
 00001066  60F0                      45      BRA LOOP
 00001068                            46      
-00001068                            47      
-00001068                            48  SHOP_TEST: 
-00001068  B27C 0031                 49      CMP #$31,D1
-0000106C  6700 0144                 50      BEQ PRINT_SHOP
+00001068                            47  SHOP_TEST: 
+00001068  B27C 0031                 48      CMP #$31,D1
+0000106C  6700 01FC                 49      BEQ PRINT_SHOP
+00001070                            50      
 00001070                            51      
-00001070                            52      
-00001070  5279 0000144C             53      ADD.W   #$000001, MONTH_COUNT
-00001076  2439 000014C8             54      MOVE.L  INCOME, D2
-0000107C  D5B9 0000144E             55      ADD.L   D2   ,MONEY
-00001082  7400                      56      MOVEQ.L #0, D2
-00001084                            57      
-00001084  6000 0002                 58      BRA LAWSUIT_TICK
-00001088                            59      
-00001088                            60  LAWSUIT_TICK:
-00001088  1639 000014C5             61      MOVE.B  LAWSUIT_CHANCE, D3
-0000108E  B67C 0064                 62      CMP #$64, D3
-00001092  67C4                      63      BEQ LOOP
-00001094  5207                      64      ADD.B   #1, D7
-00001096  6000 0002                 65      BRA ADD_CHANCE  
-0000109A                            66  
-0000109A                            67  ADD_CHANCE:
-0000109A  BE7C 0004                 68      CMP #4, D7 
-0000109E  6C00 000E                 69      BGE CHANCE100
-000010A2  5239 000014C5             70      ADD.B   #1, LAWSUIT_CHANCE
-000010A8  1E3C 0000                 71      MOVE.B   #0, D7
-000010AC  60AA                      72      BRA LOOP
-000010AE                            73  CHANCE100:
-000010AE  5339 000014C5             74      SUB.B   #1, LAWSUIT_CHANCE
-000010B4  4E75                      75      RTS
-000010B6                            76  RESET_CHANCE:
-000010B6  13FC 0000 000014C5        77      MOVE.B  #$00,   LAWSUIT_CHANCE
-000010BE  6000 009E                 78      BRA SHOP
-000010C2                            79      
-000010C2                            80  UPGRADE_AD:
-000010C2  0C79 000A 00001452        81      CMP #10,    AD_LVL
-000010CA  6700 0092                 82      BEQ SHOP
-000010CE  23DA 000014C8             83      MOVE.L  (A2)+,  INCOME 
-000010D4  23C1 0000144E             84      MOVE.L  D1, MONEY
-000010DA  4281                      85      CLR.L   D1
-000010DC  221C                      86      MOVE.L  (A4)+,  D1
-000010DE  5239 00001452             87      ADD.B   #1, AD_LVL
-000010E4  4281                      88      CLR.L   D1
-000010E6  4282                      89      CLR.L   D2
-000010E8  6000 0074                 90      BRA SHOP
-000010EC                            91  UPGRADE_LEGAL:
-000010EC  6100 001A                 92      BSR ISMAX
-000010F0  181B                      93      MOVE.B  (A3)+,  D4
-000010F2  23C1 0000144E             94      MOVE.L  D1, MONEY
-000010F8  5239 000014AA             95      ADD.B   #1, LEGAL_LVL
-000010FE  221E                      96      MOVE.L  (A6)+,  D1
-00001100  4281                      97      CLR.L   D1
-00001102  4282                      98      CLR.L   D2
-00001104  6000 0058                 99      BRA SHOP
-00001108                           100      
-00001108                           101  ISMAX:
-00001108  1813                     102      MOVE.B  (A3),   D4
-0000110A  B87C 005A                103      CMP #90,    D4
-0000110E  6700 004E                104      BEQ SHOP
-00001112  4E75                     105      RTS
-00001114                           106      
-00001114                           107  EXIT_TEST:
-00001114  B27C 0031                108      CMP #$31,   D1
-00001118  6700 0204                109      BEQ PRINT_BANNER
-0000111C  B27C 0032                110      CMP #$32,   D1
-00001120  6700 0012                111      BEQ COST_TEST2
-00001124  B27C 0033                112      CMP #$33,   D1
-00001128  6700 0020                113      BEQ COST_TEST3
-0000112C  B27C 0034                114      CMP #$34,   D1
-00001130  6784                     115      BEQ RESET_CHANCE
-00001132                           116      
-00001132  4E75                     117      RTS
-00001134                           118  COST_TEST2:
-00001134  2239 0000144E            119      MOVE.L  MONEY,  D1
-0000113A  2414                     120      MOVE.L  (A4),   D2
-0000113C  9282                     121      SUB.L   D2, D1
-0000113E  B27C 0000                122      CMP #0, D1
-00001142  6E00 FF7E                123      BGT UPGRADE_AD
-00001146  6000 0016                124      BRA SHOP
-0000114A                           125  COST_TEST3:
-0000114A  2239 0000144E            126      MOVE.L  MONEY,  D1
-00001150  2416                     127      MOVE.L  (A6),   D2
-00001152  9282                     128      SUB.L   D2, D1
-00001154  B27C 0000                129      CMP #0, D1
-00001158  6E92                     130      BGT UPGRADE_LEGAL
-0000115A  6000 0002                131      BRA SHOP
-0000115E                           132  COST_TEST4:
-0000115E                           133        
-0000115E                           134  SHOP:  
-0000115E  6100 022E                135      BSR PRINT_MONEY
-00001162  6100 00BC                136      BSR PRINT_UPGRADES
-00001166                           137      
-00001166  103C 0005                138      MOVE.B  #5, D0
-0000116A  4E4F                     139      TRAP #15
-0000116C                           140      
-0000116C  61A6                     141      BSR EXIT_TEST
-0000116E  60EE                     142      BRA SHOP
-00001170                           143  HUD:
-00001170  6100 021C                144      BSR PRINT_MONEY  
-00001174  6100 01F6                145      BSR PRINT_MONTH
-00001178  6100 0236                146      BSR PRINT_LEVELS  
-0000117C  6100 02A0                147      BSR NEWLINE
-00001180                           148       
-00001180  103C 000B                149      MOVE.B  #11,    D0
-00001184  323C 001D                150      MOVE.W  #$001D, D1
-00001188  4E4F                     151      TRAP    #15
-0000118A                           152      
-0000118A  43F9 00001640            153      LEA LINE,   A1
-00001190  103C 000E                154      MOVE.B  #14 ,D0
-00001194  4E4F                     155      TRAP    #15
-00001196                           156       
-00001196  103C 000B                157      MOVE.B  #11,    D0
-0000119A  323C 011E                158      MOVE.W  #$011E, D1
-0000119E  4E4F                     159      TRAP    #15
-000011A0                           160      
-000011A0  43F9 000014F4            161      LEA SHOP_MSG,   A1
-000011A6  103C 000E                162      MOVE.B  #14,    D0
-000011AA  4E4F                     163      TRAP    #15
-000011AC  4281                     164      CLR.L D1
-000011AE  4280                     165      CLR.L D0
-000011B0  4E75                     166      RTS
-000011B2                           167  PRINT_SHOP:
-000011B2                           168      ;CLEAR SCREEN
-000011B2  323C FF00                169      MOVE.W  #$FF00,D1
-000011B6  103C 000B                170      MOVE.B  #11, D0 
-000011BA  4E4F                     171      TRAP #15
-000011BC  4281                     172      CLR.L D1
-000011BE                           173    
-000011BE  43F9 00001640            174      LEA LINE,   A1
-000011C4  103C 000E                175      MOVE.B  #14 ,D0
-000011C8  4E4F                     176      TRAP    #15
-000011CA  6100 0252                177      BSR NEWLINE
-000011CE                           178      
-000011CE  43F9 00001518            179      LEA SHOP_BANNER,   A1
-000011D4  103C 000B                180      MOVE.B  #11,    D0
-000011D8  323C 2301                181      MOVE.W  #$2301, D1
-000011DC  4E4F                     182      TRAP    #15
-000011DE                           183      
-000011DE  103C 000E                184      MOVE.B  #14,    D0
-000011E2  4E4F                     185      TRAP    #15
-000011E4  6100 0238                186      BSR NEWLINE
-000011E8                           187      
-000011E8  43F9 00001640            188      LEA LINE,   A1
-000011EE  4E4F                     189      TRAP    #15
-000011F0                           190      
-000011F0  103C 000B                191      MOVE.B  #11,    D0
-000011F4  323C 001D                192      MOVE.W  #$001D, D1
-000011F8  4E4F                     193      TRAP    #15
-000011FA                           194      
-000011FA  43F9 00001640            195      LEA LINE,   A1
-00001200  103C 000E                196      MOVE.B  #14 ,D0
-00001204  4E4F                     197      TRAP    #15
-00001206                           198      
-00001206  103C 000B                199      MOVE.B  #11,    D0
-0000120A  323C 011E                200      MOVE.W  #$011E, D1
-0000120E  4E4F                     201      TRAP    #15
-00001210                           202      
-00001210  43F9 000014FE            203      LEA EXIT_MSG,   A1
-00001216  103C 000E                204      MOVE.B  #14,    D0
-0000121A  4E4F                     205      TRAP    #15
-0000121C                           206      
-0000121C  6000 FF40                207      BRA SHOP
-00001220                           208  PRINT_UPGRADES:
-00001220                           209      ;PRINT ADVERTISEMENT
-00001220  103C 000B                210      MOVE.B  #11,    D0
-00001224  323C 2B05                211      MOVE.W  #$2B05, D1
-00001228  4E4F                     212      TRAP    #15
-0000122A  4280                     213      CLR.L D0  
-0000122C  4281                     214      CLR.L D1
-0000122E                           215      
-0000122E  43F9 000014EC            216      LEA COST_MSG,   A1
-00001234  103C 0011                217      MOVE.B  #17,    D0
-00001238  2214                     218      MOVE.L  (A4),   D1
-0000123A  4E4F                     219      TRAP    #15
-0000123C                           220      
-0000123C                           221  
-0000123C  103C 000B                222      MOVE.B  #11,    D0
-00001240  323C 0006                223      MOVE.W  #$0006, D1
-00001244  4E4F                     224      TRAP    #15
-00001246  4280                     225      CLR.L D0  
-00001248  4281                     226      CLR.L D1
-0000124A                           227      
-0000124A  43F9 0000158D            228      LEA     AD_UP,  A1
-00001250  1239 00001452            229      MOVE.B  AD_LVL,  D1
-00001256  103C 0011                230      MOVE.B  #17,    D0
-0000125A  4E4F                     231      TRAP    #15
-0000125C  4280                     232      CLR.L D0  
-0000125E  4281                     233      CLR.L D1
-00001260                           234  
-00001260  103C 000B                235      MOVE.B  #11,    D0
-00001264  323C 1E07                236      MOVE.W  #$1E07, D1
-00001268  4E4F                     237      TRAP    #15
-0000126A  4280                     238      CLR.L D0  
-0000126C  4281                     239      CLR.L D1
-0000126E  43F9 000015C0            240      LEA INCOME_AMOUNT,  A1
-00001274  2239 000014C8            241      MOVE.L  INCOME, D1
-0000127A  103C 0011                242      MOVE.B  #17,    D0
-0000127E  4E4F                     243      TRAP    #15
-00001280                           244      ;PRINT LEGAL
-00001280  103C 000B                245      MOVE.B  #11,    D0
-00001284  323C 280A                246      MOVE.W  #$280A, D1
-00001288  4E4F                     247      TRAP    #15
-0000128A  4280                     248      CLR.L D0  
-0000128C  4281                     249      CLR.L D1
-0000128E                           250      
-0000128E  43F9 000014EC            251      LEA COST_MSG,   A1
-00001294  103C 0011                252      MOVE.B  #17,    D0
-00001298  2216                     253      MOVE.L  (A6),   D1
-0000129A  4E4F                     254      TRAP    #15
-0000129C                           255      
-0000129C  103C 000B                256      MOVE.B  #11,    D0
-000012A0  323C 000B                257      MOVE.W  #$000B, D1
-000012A4  4E4F                     258      TRAP    #15
-000012A6  4280                     259      CLR.L D0  
-000012A8  4281                     260      CLR.L D1
-000012AA                           261      
-000012AA  43F9 000015D4            262      LEA     LEGAL_UP,  A1
-000012B0  1239 000014AA            263      MOVE.B  LEGAL_LVL,  D1
-000012B6  103C 0011                264      MOVE.B  #17,    D0
-000012BA  4E4F                     265      TRAP    #15  
-000012BC  4280                     266      CLR.L D0  
-000012BE  4281                     267      CLR.L D1
-000012C0                           268  
-000012C0  103C 000B                269      MOVE.B  #11,    D0
-000012C4  323C 190C                270      MOVE.W  #$190C, D1
-000012C8  4E4F                     271      TRAP    #15
-000012CA  4280                     272      CLR.L D0  
-000012CC  4281                     273      CLR.L D1
-000012CE                           274     
-000012CE  43F9 00001604            275      LEA LEGAL_STRENGHT,  A1
-000012D4  1213                     276      MOVE.B  (A3), D1
-000012D6  103C 0011                277      MOVE.B  #17,    D0
-000012DA  4E4F                     278      TRAP    #15
-000012DC                           279      ;PRINT TRAINING
-000012DC                           280      
-000012DC  103C 000B                281      MOVE.B  #11,    D0
-000012E0  323C 270F                282      MOVE.W  #$270F, D1
-000012E4  4E4F                     283      TRAP    #15
-000012E6  4280                     284      CLR.L D0  
-000012E8  4281                     285      CLR.L D1
-000012EA                           286      
-000012EA  43F9 000014EC            287      LEA COST_MSG,   A1
-000012F0  103C 0011                288      MOVE.B  #17,    D0
-000012F4  2215                     289      MOVE.L  (A5),   D1
-000012F6  4E4F                     290      TRAP    #15
-000012F8                           291      
-000012F8  103C 000B                292      MOVE.B  #11,    D0
-000012FC  323C 0010                293      MOVE.W  #$0010, D1
-00001300  4E4F                     294      TRAP    #15
-00001302  4280                     295      CLR.L D0  
-00001304  4281                     296      CLR.L D1
-00001306                           297      
-00001306  43F9 0000155E            298      LEA TRAINING_UP,    A1
-0000130C  1239 000014C5            299      MOVE.B LAWSUIT_CHANCE,  D1
-00001312  103C 0011                300      MOVE.B  #17,    D0
-00001316  4E4F                     301      TRAP    #15  
-00001318  4280                     302      CLR.L D0  
-0000131A  4281                     303      CLR.L D1
-0000131C  4E75                     304      RTS
-0000131E                           305  PRINT_BANNER:
-0000131E                           306  
-0000131E                           307      ;CLEAR SCREEN
-0000131E  323C FF00                308      MOVE.W  #$FF00,D1
-00001322  103C 000B                309      MOVE.B  #11, D0 
-00001326  4E4F                     310      TRAP #15
-00001328  4281                     311      CLR.L D1
-0000132A                           312      
-0000132A  43F9 00001640            313      LEA LINE,   A1
-00001330  103C 000E                314      MOVE.B  #14 ,D0
-00001334  4E4F                     315      TRAP    #15  
-00001336                           316      
-00001336  3279 0000161A            317      MOVE.W  NAME_ADDRESS, A1
-0000133C  103C 000B                318      MOVE.B  #11,    D0
-00001340  3239 000014C6            319      MOVE.W  BANNER_POS, D1
-00001346  4E4F                     320      TRAP    #15
-00001348                           321      
-00001348  2279 0000161A            322      MOVE.L  NAME_ADDRESS,    A1
-0000134E  103C 000E                323      MOVE.B  #14,    D0
-00001352  4E4F                     324      TRAP    #15
-00001354                           325      
-00001354  6100 00C8                326      BSR NEWLINE
-00001358  43F9 00001640            327      LEA LINE,   A1
-0000135E  103C 000E                328      MOVE.B  #14 ,D0
-00001362  4E4F                     329      TRAP    #15
-00001364  6100 00B8                330      BSR NEWLINE
-00001368  6000 FCEE                331      BRA LOOP
-0000136C                           332      
-0000136C                           333  PRINT_MONTH:
-0000136C  103C 000B                334      MOVE.B  #11,    D0
-00001370  323C 0005                335      MOVE.W  #$0005, D1
-00001374  4E4F                     336      TRAP    #15
-00001376                           337      
-00001376  43F9 00001527            338      LEA MONTH_MSG,  A1
-0000137C  3239 0000144C            339      MOVE.W  MONTH_COUNT,  D1
-00001382  103C 0011                340      MOVE.B  #17,    D0 
-00001386  4E4F                     341      TRAP    #15
-00001388  4281                     342      CLR.L D1
-0000138A  4280                     343      CLR.L D0
-0000138C  4E75                     344      RTS
-0000138E                           345      
-0000138E                           346  PRINT_MONEY:
-0000138E                           347      
-0000138E  103C 000B                348      MOVE.B  #11,    D0
-00001392  323C 0004                349      MOVE.W  #$0004, D1
-00001396  4E4F                     350      TRAP    #15
-00001398                           351  
-00001398  43F9 0000151D            352      LEA     MONEY_MSG,  A1
-0000139E  2239 0000144E            353      MOVE.L  MONEY,  D1
-000013A4  103C 0011                354      MOVE.B  #17,    D0
-000013A8  4E4F                     355      TRAP    #15
-000013AA  4280                     356      CLR.L D0  
-000013AC  4281                     357      CLR.L D1
-000013AE  4E75                     358      RTS
-000013B0                           359      
-000013B0                           360  PRINT_LEVELS:
-000013B0  103C 000B                361      MOVE.B  #11,    D0
-000013B4  323C 0006                362      MOVE.W  #$0006, D1
-000013B8  4E4F                     363      TRAP    #15
-000013BA  4280                     364      CLR.L D0  
-000013BC  4281                     365      CLR.L D1
-000013BE                           366      
-000013BE  43F9 00001530            367      LEA     AD_LVL_MSG,  A1
-000013C4  1239 00001452            368      MOVE.B  AD_LVL,  D1
-000013CA  103C 0011                369      MOVE.B  #17,    D0
-000013CE  4E4F                     370      TRAP    #15
-000013D0  4280                     371      CLR.L D0  
-000013D2  4281                     372      CLR.L D1
-000013D4                           373      
-000013D4  103C 000B                374      MOVE.B  #11,    D0
-000013D8  323C 0007                375      MOVE.W  #$0007, D1
-000013DC  4E4F                     376      TRAP    #15
-000013DE  4280                     377      CLR.L D0  
-000013E0  4281                     378      CLR.L D1
-000013E2                           379      
-000013E2  43F9 0000153F            380      LEA     LEGAL_LVL_MSG,  A1
-000013E8  1239 000014AA            381      MOVE.B  LEGAL_LVL,  D1
-000013EE  103C 0011                382      MOVE.B  #17,    D0
-000013F2  4E4F                     383      TRAP    #15  
-000013F4  4280                     384      CLR.L D0  
-000013F6  4281                     385      CLR.L D1
-000013F8                           386      
-000013F8  103C 000B                387      MOVE.B  #11,    D0
-000013FC  323C 0008                388      MOVE.W  #$0008, D1
-00001400  4E4F                     389      TRAP    #15
-00001402  4280                     390      CLR.L D0  
-00001404  4281                     391      CLR.L D1
-00001406  43F9 0000154C            392      LEA LAWSUIT,    A1
-0000140C  1239 000014C5            393      MOVE.B LAWSUIT_CHANCE,  D1
-00001412  103C 0011                394      MOVE.B  #17,    D0
-00001416  4E4F                     395      TRAP    #15  
-00001418  4280                     396      CLR.L D0  
-0000141A  4281                     397      CLR.L D1
-0000141C  4E75                     398      RTS
-0000141E                           399   
-0000141E                           400  NEWLINE:
-0000141E  43F9 0000169F            401      LEA EMPTY,    A1
-00001424  103C 0000                402      MOVE.B  #0, D0
-00001428  4E4F                     403      TRAP    #15
-0000142A  4E75                     404      RTS
-0000142C                           405      
-0000142C                           406  RANDOM_NUMBER:     
-0000142C  103C 0008                407      MOVE.B #8, D0       #Loads D1 with Time in 100's of Seconds since midnight (6 Bits)
-00001430  4E4F                     408      TRAP #15            #Place time in D1
-00001432  C2BC 005FFFFF            409      AND.L #$5FFFFF, D1  # AND 6 Bits to prevent any overflow
-00001438  82FC 0064                410      DIVU #100, D1       #Divide by 100, 1000, 10000 depending on Number range required
-0000143C  4841                     411      SWAP D1             #SWAP Higher Order Word and Lower Order Word in D1
-0000143E  5241                     412      ADDQ.W #1, D1       #Add 1 to D1.W so number is at least 1
-00001440  3401                     413      MOVE.W D1, D2       #Extract the number from D1.W
-00001442  4281                     414      CLR.L D1            # Clear contents of D1
-00001444  3202                     415      MOVE.W D2, D1       #Move the generated number to D1
-00001446  4E75                     416      RTS
-00001448                           417  
-00001448                           418  END:
-00001448                           419  
-00001448  FFFF FFFF                420      SIMHALT 
-0000144C                           421      
-0000144C= 0000                     422  MONTH_COUNT DC.W    0
-0000144E= 000003E8                 423  MONEY   DC.L    1000
-00001452= 01                       424  AD_LVL  DC.B    1
-00001454= 00001388 00007530 ...    425  AD_COST DC.L    5000, 30000, 50000, 150000, 800000, 1500000, 5000000, 10000000, 210000000, 50000000, 1
-00001480= 0000015E 0000031B ...    426  INCOME_UPGRADE  DC.L    350, 795, 1400, 8750, 13750, 28500, 53450, 80265, 295000, 468000 
-000014A8= 0000                     427  INCOME_UP_ADDRESS   DC.W    0
-000014AA= 01                       428  LEGAL_LVL   DC.B    1
-000014AC= 00001D4C 00003A98 ...    429  LEGAL_COST  DC.L    7500, 15000, 50000, 250000, 1000000
-000014C0= 14 23 3C 55 5A           430  LAWSUIT_SUCCESS DC.B    20, 35, 60, 85, 90
-000014C5= 02                       431  LAWSUIT_CHANCE  DC.B    2
-000014C6= 2501                     432  BANNER_POS  DC.W    $2501
-000014C8= 00000032                 433  INCOME  DC.L    50  
-000014CC= 00002710 000088B8 ...    434  TRAINING_COST   DC.L   10000, 35000, 89750, 150000, 300000, 850000, 1500000, 4500000  
-000014EC                           435  
-000014EC= 43 4F 53 54 3A 20 ...    436  COST_MSG:   DC.B    'COST: $',0
-000014F4= 20 28 31 29 3A 53 ...    437  SHOP_MSG:   DC.B    ' (1):SHOP',0
-000014FE= 28 31 29 3A 42 41 ...    438  EXIT_MSG:   DC.B    '(1):BACK TO THE OFFICE :(',0
-00001518= 53 48 4F 50 00           439  SHOP_BANNER:   DC.B    'SHOP',0
-0000151D= 20 4D 4F 4E 45 59 ...    440  MONEY_MSG: DC.B ' MONEY: $',0
-00001527= 20 4D 4F 4E 54 48 ...    441  MONTH_MSG: DC.B ' MONTH: ',0
-00001530= 20 41 44 56 45 52 ...    442  AD_LVL_MSG:    DC.B    ' ADVERT LVL : ',0
-0000153F= 20 4C 45 47 41 4C ...    443  LEGAL_LVL_MSG:    DC.B    ' LEGAL LVL: ',0
-0000154C= 20 4C 41 57 53 55 ...    444  LAWSUIT:    DC.B    ' LAWSUIT CHANCE: ',0
-0000155E= 28 34 29 20 55 50 ...    445  TRAINING_UP:   DC.B    '(4) UPGRADE TRAINING (RESET LAWSUIT CHANCE):  ',0
-0000158D= 28 32 29 20 55 50 ...    446  AD_UP:  DC.B    '(2) UPGRADE ADVERTISING (INCREASE ADVERT LEVEL):  ',0
-000015C0= 20 49 4E 43 4F 4D ...    447  INCOME_AMOUNT:  DC.B  ' INCOME (MONTHLY): ',0
-000015D4= 28 33 29 20 55 50 ...    448  LEGAL_UP:   DC.B    '(3) UPGRADE LEGALTEAM (INCREASE LEGAL LEVEL):  ',0
-00001604= 4C 45 47 41 4C 20 ...    449  LEGAL_STRENGHT: DC.B    'LEGAL TEAM STRENGHT: ',0
-0000161A                           450  
-0000161A= 00000000                 451  NAME_ADDRESS    DC.L    0
-0000161E= 45 6E 74 65 72 20 ...    452  NAME: DC.B  'Enter the name of your business: ',0
-00001640= 2D 2D 2D 2D 2D 2D ...    453  LINE:   DC.B    '----------------------------------------------------------------------------------------------'  ,0
-0000169F                           454  
-0000169F= 20 00                    455  EMPTY:    DC.B    ' ',0
-000016A1                           456      END    START
+00001070  5279 00001504             52      ADD.W   #$000001, MONTH_COUNT
+00001076  2439 00001580             53      MOVE.L  INCOME, D2
+0000107C  D5B9 00001506             54      ADD.L   D2   ,MONEY
+00001082  7400                      55      MOVEQ.L #0, D2
+00001084                            56      
+00001084  6000 0010                 57      BRA LAWSUIT_TICK
+00001088                            58  ADD_CHANCE:
+00001088  5239 0000157D             59      ADD.B   #1, LAWSUIT_CHANCE
+0000108E  1E3C 0000                 60      MOVE.B  #0, D7
+00001092  6100 001C                 61      BSR TRY_LAWSUIT
+00001096                            62  LAWSUIT_TICK:
+00001096  5207                      63      ADD.B   #1, D7
+00001098  1639 0000157D             64      MOVE.B  LAWSUIT_CHANCE, D3
+0000109E  B67C 0064                 65      CMP #$64, D3
+000010A2  6D00 0004                 66      BLT CHANCE
+000010A6  60B0                      67      BRA LOOP
+000010A8                            68  CHANCE:
+000010A8  BE7C 0014                 69      CMP #20, D7
+000010AC  6CDA                      70      BGE ADD_CHANCE
+000010AE  60A8                      71      BRA LOOP
+000010B0                            72  TRY_LAWSUIT:
+000010B0  6100 0432                 73      BSR RANDOM_NUMBER
+000010B4  1439 0000157D             74      MOVE.B  LAWSUIT_CHANCE, D2
+000010BA  B242                      75      CMP D2, D1
+000010BC  6F00 0004                 76      BLE LAWSUIT_SCREEN
+000010C0  6096                      77      BRA LOOP
+000010C2                            78  
+000010C2                            79  LAWSUIT_SCREEN:
+000010C2                            80      ;CLEAR SCREEN
+000010C2  323C FF00                 81      MOVE.W  #$FF00,D1
+000010C6  103C 000B                 82      MOVE.B  #11, D0 
+000010CA  4E4F                      83      TRAP #15
+000010CC  4281                      84      CLR.L D1
+000010CE                            85      
+000010CE  323C 010E                 86      MOVE.W  #$010E, D1
+000010D2  4E4F                      87      TRAP    #15
+000010D4                            88      
+000010D4  43F9 000016CA             89      LEA LAWSUIT_MSG,    A1
+000010DA  103C 000D                 90      MOVE.B  #13,    D0
+000010DE  4E4F                      91      TRAP    #15
+000010E0  4281                      92      CLR.L   D1
+000010E2  103C 0005                 93      MOVE.B  #5, D0
+000010E6  4E4F                      94      TRAP #15
+000010E8                            95  
+000010E8  B27C 0031                 96      CMP #$31, D1
+000010EC  6700 0030                 97      BEQ FIGHT
+000010F0                            98  
+000010F0  B27C 0032                 99      CMP #$32,  D1
+000010F4  6700 0010                100      BEQ PAY  
+000010F8                           101   
+000010F8                           102      ;CLEAR SCREEN
+000010F8  323C FF00                103      MOVE.W  #$FF00,D1
+000010FC  103C 000B                104      MOVE.B  #11, D0 
+00001100  4E4F                     105      TRAP #15
+00001102  4281                     106      CLR.L D1
+00001104  60BC                     107      BRA LAWSUIT_SCREEN 
+00001106                           108  PAY:
+00001106  2039 00001506            109      MOVE.L  MONEY,  D0
+0000110C  80FC 0002                110      DIVU.W  #2, D0
+00001110  91B9 00001506            111      SUB.L  D0, MONEY
+00001116  6000 02BE                112      BRA PRINT_BANNER
+0000111A  6000 FF3C                113      BRA LOOP 
+0000111E                           114      
+0000111E                           115  FIGHT:
+0000111E  6100 03C4                116      BSR RANDOM_NUMBER
+00001122  1413                     117      MOVE.B  (A3), D2
+00001124  B242                     118      CMP D2, D1
+00001126  6D00 0002                119      BLT FIGHT_LOSE
+0000112A                           120  
+0000112A                           121  FIGHT_LOSE:
+0000112A  2039 00001506            122      MOVE.L  MONEY,  D0
+00001130  80FC 000A                123      DIVU    #10,    D0
+00001134  C0FC 0008                124      MULU    #8, D0
+00001138  91B9 00001506            125      SUB.L   D0,  MONEY
+0000113E  6000 0296                126      BRA PRINT_BANNER
+00001142                           127  RESET_CHANCE:
+00001142  4239 0000157D            128      CLR.B   LAWSUIT_CHANCE
+00001148  23C1 00001506            129      MOVE.L  D1, MONEY
+0000114E  4281                     130      CLR.L   D1
+00001150  0C55 C350                131      CMP #50000,   (A5)
+00001154  6C00 00C0                132      BGE SHOP
+00001158  221D                     133      MOVE.L  (A5)+,  D1
+0000115A  6000 00BA                134      BRA SHOP 
+0000115E                           135  UPGRADE_AD:
+0000115E  0C79 000A 0000150A       136      CMP #10,    AD_LVL
+00001166  6700 00AE                137      BEQ SHOP
+0000116A  23DA 00001580            138      MOVE.L  (A2)+,  INCOME 
+00001170  23C1 00001506            139      MOVE.L  D1, MONEY
+00001176  4281                     140      CLR.L   D1
+00001178  221C                     141      MOVE.L  (A4)+,  D1
+0000117A  5239 0000150A            142      ADD.B   #1, AD_LVL
+00001180  4281                     143      CLR.L   D1
+00001182  4282                     144      CLR.L   D2
+00001184  6000 0090                145      BRA SHOP
+00001188                           146  UPGRADE_LEGAL:
+00001188  0C79 0007 00001562       147      CMP #7, LEGAL_LVL
+00001190  6700 0084                148      BEQ SHOP
+00001194  181B                     149      MOVE.B  (A3)+,  D4
+00001196  23C1 00001506            150      MOVE.L  D1, MONEY
+0000119C  5239 00001562            151      ADD.B   #1, LEGAL_LVL
+000011A2  221E                     152      MOVE.L  (A6)+,  D1
+000011A4  4281                     153      CLR.L   D1
+000011A6  4282                     154      CLR.L   D2
+000011A8  6000 006C                155      BRA SHOP
+000011AC                           156      
+000011AC                           157  EXIT_TEST:
+000011AC  B27C 0031                158      CMP #$31,   D1
+000011B0  6700 0224                159      BEQ PRINT_BANNER
+000011B4  B27C 0032                160      CMP #$32,   D1
+000011B8  6700 0014                161      BEQ COST_TEST2
+000011BC  B27C 0033                162      CMP #$33,   D1
+000011C0  6700 001E                163      BEQ COST_TEST3
+000011C4  B27C 0034                164      CMP #$34,   D1
+000011C8  6700 FF78                165      BEQ RESET_CHANCE
+000011CC                           166      
+000011CC  4E75                     167      RTS
+000011CE                           168  COST_TEST2:
+000011CE  2239 00001506            169      MOVE.L  MONEY,  D1
+000011D4  2414                     170      MOVE.L  (A4),   D2
+000011D6  9282                     171      SUB.L   D2, D1
+000011D8  4A41                     172      TST D1
+000011DA  6E82                     173      BGT UPGRADE_AD
+000011DC  6000 0038                174      BRA SHOP
+000011E0                           175  COST_TEST3:
+000011E0  2239 00001506            176      MOVE.L  MONEY,  D1
+000011E6  2416                     177      MOVE.L  (A6),   D2
+000011E8  9282                     178      SUB.L   D2, D1
+000011EA  4A41                     179      TST D1
+000011EC  6E9A                     180      BGT UPGRADE_LEGAL
+000011EE  6000 0026                181      BRA SHOP
+000011F2                           182  COST_TEST4:
+000011F2  2239 00001506            183      MOVE.L  MONEY,  D1
+000011F8  2415                     184      MOVE.L  (A5),   D2
+000011FA  9282                     185      SUB.L   D2, D1
+000011FC  4A41                     186      TST D1
+000011FE  6E00 FF42                187      BGT RESET_CHANCE
+00001202  6000 0012                188      BRA SHOP 
+00001206                           189  
+00001206                           190  IS_NEGATIVE:
+00001206  323C FF00                191      MOVE.W  #$FF00,D1
+0000120A  103C 000B                192      MOVE.B  #11, D0 
+0000120E  4E4F                     193      TRAP #15
+00001210  4281                     194      CLR.L D1
+00001212                           195      
+00001212  6000 0002                196      BRA SHOP
+00001216                           197  SHOP:  
+00001216  6100 022E                198      BSR PRINT_MONEY
+0000121A  6100 00BC                199      BSR PRINT_UPGRADES
+0000121E                           200      
+0000121E  103C 0005                201      MOVE.B  #5, D0
+00001222  4E4F                     202      TRAP #15
+00001224                           203      
+00001224  6186                     204      BSR EXIT_TEST
+00001226  60EE                     205      BRA SHOP
+00001228                           206  HUD:
+00001228  6100 021C                207      BSR PRINT_MONEY  
+0000122C  6100 01F6                208      BSR PRINT_MONTH
+00001230  6100 0236                209      BSR PRINT_LEVELS  
+00001234  6100 02A0                210      BSR NEWLINE
+00001238                           211       
+00001238  103C 000B                212      MOVE.B  #11,    D0
+0000123C  323C 001D                213      MOVE.W  #$001D, D1
+00001240  4E4F                     214      TRAP    #15
+00001242                           215      
+00001242  43F9 0000173E            216      LEA LINE,   A1
+00001248  103C 000E                217      MOVE.B  #14 ,D0
+0000124C  4E4F                     218      TRAP    #15
+0000124E                           219       
+0000124E  103C 000B                220      MOVE.B  #11,    D0
+00001252  323C 011E                221      MOVE.W  #$011E, D1
+00001256  4E4F                     222      TRAP    #15
+00001258                           223      
+00001258  43F9 000015A4            224      LEA SHOP_MSG,   A1
+0000125E  103C 000E                225      MOVE.B  #14,    D0
+00001262  4E4F                     226      TRAP    #15
+00001264  4281                     227      CLR.L D1
+00001266  4280                     228      CLR.L D0
+00001268  4E75                     229      RTS
+0000126A                           230  PRINT_SHOP:
+0000126A                           231      ;CLEAR SCREEN
+0000126A  323C FF00                232      MOVE.W  #$FF00,D1
+0000126E  103C 000B                233      MOVE.B  #11, D0 
+00001272  4E4F                     234      TRAP #15
+00001274  4281                     235      CLR.L D1
+00001276                           236    
+00001276  43F9 0000173E            237      LEA LINE,   A1
+0000127C  103C 000E                238      MOVE.B  #14 ,D0
+00001280  4E4F                     239      TRAP    #15
+00001282  6100 0252                240      BSR NEWLINE
+00001286                           241      
+00001286  43F9 000015C8            242      LEA SHOP_BANNER,   A1
+0000128C  103C 000B                243      MOVE.B  #11,    D0
+00001290  323C 2301                244      MOVE.W  #$2301, D1
+00001294  4E4F                     245      TRAP    #15
+00001296                           246      
+00001296  103C 000E                247      MOVE.B  #14,    D0
+0000129A  4E4F                     248      TRAP    #15
+0000129C  6100 0238                249      BSR NEWLINE
+000012A0                           250      
+000012A0  43F9 0000173E            251      LEA LINE,   A1
+000012A6  4E4F                     252      TRAP    #15
+000012A8                           253      
+000012A8  103C 000B                254      MOVE.B  #11,    D0
+000012AC  323C 001D                255      MOVE.W  #$001D, D1
+000012B0  4E4F                     256      TRAP    #15
+000012B2                           257      
+000012B2  43F9 0000173E            258      LEA LINE,   A1
+000012B8  103C 000E                259      MOVE.B  #14 ,D0
+000012BC  4E4F                     260      TRAP    #15
+000012BE                           261      
+000012BE  103C 000B                262      MOVE.B  #11,    D0
+000012C2  323C 011E                263      MOVE.W  #$011E, D1
+000012C6  4E4F                     264      TRAP    #15
+000012C8                           265      
+000012C8  43F9 000015AE            266      LEA EXIT_MSG,   A1
+000012CE  103C 000E                267      MOVE.B  #14,    D0
+000012D2  4E4F                     268      TRAP    #15
+000012D4                           269      
+000012D4  6000 FF40                270      BRA SHOP
+000012D8                           271  PRINT_UPGRADES:
+000012D8                           272      ;PRINT ADVERTISEMENT
+000012D8  103C 000B                273      MOVE.B  #11,    D0
+000012DC  323C 2B05                274      MOVE.W  #$2B05, D1
+000012E0  4E4F                     275      TRAP    #15
+000012E2  4280                     276      CLR.L D0  
+000012E4  4281                     277      CLR.L D1
+000012E6                           278      
+000012E6  43F9 0000159C            279      LEA COST_MSG,   A1
+000012EC  103C 0011                280      MOVE.B  #17,    D0
+000012F0  2214                     281      MOVE.L  (A4),   D1
+000012F2  4E4F                     282      TRAP    #15
+000012F4                           283      
+000012F4                           284  
+000012F4  103C 000B                285      MOVE.B  #11,    D0
+000012F8  323C 0006                286      MOVE.W  #$0006, D1
+000012FC  4E4F                     287      TRAP    #15
+000012FE  4280                     288      CLR.L D0  
+00001300  4281                     289      CLR.L D1
+00001302                           290      
+00001302  43F9 0000163D            291      LEA     AD_UP,  A1
+00001308  1239 0000150A            292      MOVE.B  AD_LVL,  D1
+0000130E  103C 0011                293      MOVE.B  #17,    D0
+00001312  4E4F                     294      TRAP    #15
+00001314  4280                     295      CLR.L D0  
+00001316  4281                     296      CLR.L D1
+00001318                           297  
+00001318  103C 000B                298      MOVE.B  #11,    D0
+0000131C  323C 1E07                299      MOVE.W  #$1E07, D1
+00001320  4E4F                     300      TRAP    #15
+00001322  4280                     301      CLR.L D0  
+00001324  4281                     302      CLR.L D1
+00001326  43F9 00001670            303      LEA INCOME_AMOUNT,  A1
+0000132C  2239 00001580            304      MOVE.L  INCOME, D1
+00001332  103C 0011                305      MOVE.B  #17,    D0
+00001336  4E4F                     306      TRAP    #15
+00001338                           307      ;PRINT LEGAL
+00001338  103C 000B                308      MOVE.B  #11,    D0
+0000133C  323C 280A                309      MOVE.W  #$280A, D1
+00001340  4E4F                     310      TRAP    #15
+00001342  4280                     311      CLR.L D0  
+00001344  4281                     312      CLR.L D1
+00001346                           313      
+00001346  43F9 0000159C            314      LEA COST_MSG,   A1
+0000134C  103C 0011                315      MOVE.B  #17,    D0
+00001350  2216                     316      MOVE.L  (A6),   D1
+00001352  4E4F                     317      TRAP    #15
+00001354                           318      
+00001354  103C 000B                319      MOVE.B  #11,    D0
+00001358  323C 000B                320      MOVE.W  #$000B, D1
+0000135C  4E4F                     321      TRAP    #15
+0000135E  4280                     322      CLR.L D0  
+00001360  4281                     323      CLR.L D1
+00001362                           324      
+00001362  43F9 00001684            325      LEA     LEGAL_UP,  A1
+00001368  1239 00001562            326      MOVE.B  LEGAL_LVL,  D1
+0000136E  103C 0011                327      MOVE.B  #17,    D0
+00001372  4E4F                     328      TRAP    #15  
+00001374  4280                     329      CLR.L D0  
+00001376  4281                     330      CLR.L D1
+00001378                           331  
+00001378  103C 000B                332      MOVE.B  #11,    D0
+0000137C  323C 190C                333      MOVE.W  #$190C, D1
+00001380  4E4F                     334      TRAP    #15
+00001382  4280                     335      CLR.L D0  
+00001384  4281                     336      CLR.L D1
+00001386                           337     
+00001386  43F9 000016B4            338      LEA LEGAL_STRENGHT,  A1
+0000138C  1213                     339      MOVE.B  (A3), D1
+0000138E  103C 0011                340      MOVE.B  #17,    D0
+00001392  4E4F                     341      TRAP    #15
+00001394                           342      ;PRINT TRAINING
+00001394                           343      
+00001394  103C 000B                344      MOVE.B  #11,    D0
+00001398  323C 270F                345      MOVE.W  #$270F, D1
+0000139C  4E4F                     346      TRAP    #15
+0000139E  4280                     347      CLR.L D0  
+000013A0  4281                     348      CLR.L D1
+000013A2                           349      
+000013A2  43F9 0000159C            350      LEA COST_MSG,   A1
+000013A8  103C 0011                351      MOVE.B  #17,    D0
+000013AC  2215                     352      MOVE.L  (A5),   D1
+000013AE  4E4F                     353      TRAP    #15
+000013B0                           354      
+000013B0  103C 000B                355      MOVE.B  #11,    D0
+000013B4  323C 0010                356      MOVE.W  #$0010, D1
+000013B8  4E4F                     357      TRAP    #15
+000013BA  4280                     358      CLR.L D0  
+000013BC  4281                     359      CLR.L D1
+000013BE                           360      
+000013BE  43F9 0000160E            361      LEA TRAINING_UP,    A1
+000013C4  1239 0000157D            362      MOVE.B LAWSUIT_CHANCE,  D1
+000013CA  103C 0011                363      MOVE.B  #17,    D0
+000013CE  4E4F                     364      TRAP    #15  
+000013D0  4280                     365      CLR.L D0  
+000013D2  4281                     366      CLR.L D1
+000013D4  4E75                     367      RTS
+000013D6                           368  PRINT_BANNER:
+000013D6                           369  
+000013D6                           370      ;CLEAR SCREEN
+000013D6  323C FF00                371      MOVE.W  #$FF00,D1
+000013DA  103C 000B                372      MOVE.B  #11, D0 
+000013DE  4E4F                     373      TRAP #15
+000013E0  4281                     374      CLR.L D1
+000013E2                           375      
+000013E2  43F9 0000173E            376      LEA LINE,   A1
+000013E8  103C 000E                377      MOVE.B  #14 ,D0
+000013EC  4E4F                     378      TRAP    #15  
+000013EE                           379      
+000013EE  3279 00001718            380      MOVE.W  NAME_ADDRESS, A1
+000013F4  103C 000B                381      MOVE.B  #11,    D0
+000013F8  3239 0000157E            382      MOVE.W  BANNER_POS, D1
+000013FE  4E4F                     383      TRAP    #15
+00001400                           384      
+00001400  2279 00001718            385      MOVE.L  NAME_ADDRESS,    A1
+00001406  103C 000E                386      MOVE.B  #14,    D0
+0000140A  4E4F                     387      TRAP    #15
+0000140C                           388      
+0000140C  6100 00C8                389      BSR NEWLINE
+00001410  43F9 0000173E            390      LEA LINE,   A1
+00001416  103C 000E                391      MOVE.B  #14 ,D0
+0000141A  4E4F                     392      TRAP    #15
+0000141C  6100 00B8                393      BSR NEWLINE
+00001420  6000 FC36                394      BRA LOOP
+00001424                           395      
+00001424                           396  PRINT_MONTH:
+00001424  103C 000B                397      MOVE.B  #11,    D0
+00001428  323C 0005                398      MOVE.W  #$0005, D1
+0000142C  4E4F                     399      TRAP    #15
+0000142E                           400      
+0000142E  43F9 000015D7            401      LEA MONTH_MSG,  A1
+00001434  3239 00001504            402      MOVE.W  MONTH_COUNT,  D1
+0000143A  103C 0011                403      MOVE.B  #17,    D0 
+0000143E  4E4F                     404      TRAP    #15
+00001440  4281                     405      CLR.L D1
+00001442  4280                     406      CLR.L D0
+00001444  4E75                     407      RTS
+00001446                           408      
+00001446                           409  PRINT_MONEY:
+00001446                           410      
+00001446  103C 000B                411      MOVE.B  #11,    D0
+0000144A  323C 0004                412      MOVE.W  #$0004, D1
+0000144E  4E4F                     413      TRAP    #15
+00001450                           414  
+00001450  43F9 000015CD            415      LEA     MONEY_MSG,  A1
+00001456  2239 00001506            416      MOVE.L  MONEY,  D1
+0000145C  103C 0011                417      MOVE.B  #17,    D0
+00001460  4E4F                     418      TRAP    #15
+00001462  4280                     419      CLR.L D0  
+00001464  4281                     420      CLR.L D1
+00001466  4E75                     421      RTS
+00001468                           422      
+00001468                           423  PRINT_LEVELS:
+00001468  103C 000B                424      MOVE.B  #11,    D0
+0000146C  323C 0006                425      MOVE.W  #$0006, D1
+00001470  4E4F                     426      TRAP    #15
+00001472  4280                     427      CLR.L D0  
+00001474  4281                     428      CLR.L D1
+00001476                           429      
+00001476  43F9 000015E0            430      LEA     AD_LVL_MSG,  A1
+0000147C  1239 0000150A            431      MOVE.B  AD_LVL,  D1
+00001482  103C 0011                432      MOVE.B  #17,    D0
+00001486  4E4F                     433      TRAP    #15
+00001488  4280                     434      CLR.L D0  
+0000148A  4281                     435      CLR.L D1
+0000148C                           436      
+0000148C  103C 000B                437      MOVE.B  #11,    D0
+00001490  323C 0007                438      MOVE.W  #$0007, D1
+00001494  4E4F                     439      TRAP    #15
+00001496  4280                     440      CLR.L D0  
+00001498  4281                     441      CLR.L D1
+0000149A                           442      
+0000149A  43F9 000015EF            443      LEA     LEGAL_LVL_MSG,  A1
+000014A0  1239 00001562            444      MOVE.B  LEGAL_LVL,  D1
+000014A6  103C 0011                445      MOVE.B  #17,    D0
+000014AA  4E4F                     446      TRAP    #15  
+000014AC  4280                     447      CLR.L D0  
+000014AE  4281                     448      CLR.L D1
+000014B0                           449      
+000014B0  103C 000B                450      MOVE.B  #11,    D0
+000014B4  323C 0008                451      MOVE.W  #$0008, D1
+000014B8  4E4F                     452      TRAP    #15
+000014BA  4280                     453      CLR.L D0  
+000014BC  4281                     454      CLR.L D1
+000014BE  43F9 000015FC            455      LEA LAWSUIT,    A1
+000014C4  1239 0000157D            456      MOVE.B LAWSUIT_CHANCE,  D1
+000014CA  103C 0011                457      MOVE.B  #17,    D0
+000014CE  4E4F                     458      TRAP    #15  
+000014D0  4280                     459      CLR.L D0  
+000014D2  4281                     460      CLR.L D1
+000014D4  4E75                     461      RTS
+000014D6                           462   
+000014D6                           463  NEWLINE:
+000014D6  43F9 0000179D            464      LEA EMPTY,    A1
+000014DC  103C 0000                465      MOVE.B  #0, D0
+000014E0  4E4F                     466      TRAP    #15
+000014E2  4E75                     467      RTS
+000014E4                           468      
+000014E4                           469  RANDOM_NUMBER:     
+000014E4  103C 0008                470      MOVE.B #8, D0       #Loads D1 with Time in 100's of Seconds since midnight (6 Bits)
+000014E8  4E4F                     471      TRAP #15            #Place time in D1
+000014EA  C2BC 005FFFFF            472      AND.L #$5FFFFF, D1  # AND 6 Bits to prevent any overflow
+000014F0  82FC 0064                473      DIVU #100, D1       #Divide by 100, 1000, 10000 depending on Number range required
+000014F4  4841                     474      SWAP D1             #SWAP Higher Order Word and Lower Order Word in D1
+000014F6  5241                     475      ADDQ.W #1, D1       #Add 1 to D1.W so number is at least 1
+000014F8  3401                     476      MOVE.W D1, D2       #Extract the number from D1.W
+000014FA  4281                     477      CLR.L D1            # Clear contents of D1
+000014FC  3202                     478      MOVE.W D2, D1       #Move the generated number to D1
+000014FE  4E75                     479      RTS
+00001500                           480  
+00001500                           481  END:
+00001500                           482  
+00001500  FFFF FFFF                483      SIMHALT 
+00001504                           484      
+00001504= 0000                     485  MONTH_COUNT DC.W    0
+00001506= 000003E8                 486  MONEY   DC.L    1000
+0000150A= 01                       487  AD_LVL  DC.B    1
+0000150C= 00001388 00007530 ...    488  AD_COST DC.L    5000, 30000, 50000, 150000, 800000, 1500000, 5000000, 10000000, 210000000, 50000000, 1
+00001538= 0000015E 0000031B ...    489  INCOME_UPGRADE  DC.L    350, 795, 1400, 8750, 13750, 28500, 53450, 80265, 295000, 468000 
+00001560= 0000                     490  INCOME_UP_ADDRESS   DC.W    0
+00001562= 01                       491  LEGAL_LVL   DC.B    1
+00001564= 00001D4C 00003A98 ...    492  LEGAL_COST  DC.L    7500, 15000, 50000, 250000, 1000000
+00001578= 14 23 3C 55 5A           493  LAWSUIT_SUCCESS DC.B    20, 35, 60, 85, 90
+0000157D= 02                       494  LAWSUIT_CHANCE  DC.B    2
+0000157E= 2501                     495  BANNER_POS  DC.W    $2501
+00001580= 00000032                 496  INCOME  DC.L    50  
+00001584= 000003E8 00000DAC ...    497  TRAINING_COST   DC.L   1000, 3500, 10750, 15000, 30000, 50000
+0000159C                           498  
+0000159C= 43 4F 53 54 3A 20 ...    499  COST_MSG:   DC.B    'COST: $',0
+000015A4= 20 28 31 29 3A 53 ...    500  SHOP_MSG:   DC.B    ' (1):SHOP',0
+000015AE= 28 31 29 3A 42 41 ...    501  EXIT_MSG:   DC.B    '(1):BACK TO THE OFFICE :(',0
+000015C8= 53 48 4F 50 00           502  SHOP_BANNER:   DC.B    'SHOP',0
+000015CD= 20 4D 4F 4E 45 59 ...    503  MONEY_MSG: DC.B ' MONEY: $',0
+000015D7= 20 4D 4F 4E 54 48 ...    504  MONTH_MSG: DC.B ' MONTH: ',0
+000015E0= 20 41 44 56 45 52 ...    505  AD_LVL_MSG:    DC.B    ' ADVERT LVL : ',0
+000015EF= 20 4C 45 47 41 4C ...    506  LEGAL_LVL_MSG:    DC.B    ' LEGAL LVL: ',0
+000015FC= 20 4C 41 57 53 55 ...    507  LAWSUIT:    DC.B    ' LAWSUIT CHANCE: ',0
+0000160E= 28 34 29 20 55 50 ...    508  TRAINING_UP:   DC.B    '(4) UPGRADE TRAINING (RESET LAWSUIT CHANCE):  ',0
+0000163D= 28 32 29 20 55 50 ...    509  AD_UP:  DC.B    '(2) UPGRADE ADVERTISING (INCREASE ADVERT LEVEL):  ',0
+00001670= 20 49 4E 43 4F 4D ...    510  INCOME_AMOUNT:  DC.B  ' INCOME (MONTHLY): ',0
+00001684= 28 33 29 20 55 50 ...    511  LEGAL_UP:   DC.B    '(3) UPGRADE LEGALTEAM (INCREASE LEGAL LEVEL):  ',0
+000016B4= 4C 45 47 41 4C 20 ...    512  LEGAL_STRENGHT: DC.B    'LEGAL TEAM STRENGHT: ',0
+000016CA= 59 4F 55 20 48 41 ...    513  LAWSUIT_MSG:    DC.B    'YOU HAVE BEEN HIT BY A LAWSUIT '
+000016E9= 57 4F 55 4C 44 20 ...    514                  DC.B    'WOULD YOU LIKE TO (1)FIGHT IT OR (2)PAY IT OFF',0
+00001718                           515  
+00001718= 00000000                 516  NAME_ADDRESS    DC.L    0
+0000171C= 45 6E 74 65 72 20 ...    517  NAME: DC.B  'Enter the name of your business: ',0
+0000173E= 2D 2D 2D 2D 2D 2D ...    518  LINE:   DC.B    '----------------------------------------------------------------------------------------------'  ,0
+0000179D                           519  
+0000179D= 20 00                    520  EMPTY:    DC.B    ' ',0
+0000179F                           521      END    START
 
 No errors detected
 No warnings generated
@@ -466,59 +531,65 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-ADD_CHANCE          109A
-AD_COST             1454
-AD_LVL              1452
-AD_LVL_MSG          1530
-AD_UP               158D
-BANNER_POS          14C6
-CHANCE100           10AE
-COST_MSG            14EC
-COST_TEST2          1134
-COST_TEST3          114A
-COST_TEST4          115E
-EMPTY               169F
-END                 1448
-EXIT_MSG            14FE
-EXIT_TEST           1114
-HUD                 1170
-INCOME              14C8
-INCOME_AMOUNT       15C0
-INCOME_UPGRADE      1480
-INCOME_UP_ADDRESS   14A8
-ISMAX               1108
-LAWSUIT             154C
-LAWSUIT_CHANCE      14C5
-LAWSUIT_SUCCESS     14C0
-LAWSUIT_TICK        1088
-LEGAL_COST          14AC
-LEGAL_LVL           14AA
-LEGAL_LVL_MSG       153F
-LEGAL_STRENGHT      1604
-LEGAL_UP            15D4
-LINE                1640
+ADD_CHANCE          1088
+AD_COST             150C
+AD_LVL              150A
+AD_LVL_MSG          15E0
+AD_UP               163D
+BANNER_POS          157E
+CHANCE              10A8
+COST_MSG            159C
+COST_TEST2          11CE
+COST_TEST3          11E0
+COST_TEST4          11F2
+EMPTY               179D
+END                 1500
+EXIT_MSG            15AE
+EXIT_TEST           11AC
+FIGHT               111E
+FIGHT_LOSE          112A
+HUD                 1228
+INCOME              1580
+INCOME_AMOUNT       1670
+INCOME_UPGRADE      1538
+INCOME_UP_ADDRESS   1560
+IS_NEGATIVE         1206
+LAWSUIT             15FC
+LAWSUIT_CHANCE      157D
+LAWSUIT_MSG         16CA
+LAWSUIT_SCREEN      10C2
+LAWSUIT_SUCCESS     1578
+LAWSUIT_TICK        1096
+LEGAL_COST          1564
+LEGAL_LVL           1562
+LEGAL_LVL_MSG       15EF
+LEGAL_STRENGHT      16B4
+LEGAL_UP            1684
+LINE                173E
 LOOP                1058
-MONEY               144E
-MONEY_MSG           151D
-MONTH_COUNT         144C
-MONTH_MSG           1527
-NAME                161E
-NAME_ADDRESS        161A
-NEWLINE             141E
-PRINT_BANNER        131E
-PRINT_LEVELS        13B0
-PRINT_MONEY         138E
-PRINT_MONTH         136C
-PRINT_SHOP          11B2
-PRINT_UPGRADES      1220
-RANDOM_NUMBER       142C
-RESET_CHANCE        10B6
-SHOP                115E
-SHOP_BANNER         1518
-SHOP_MSG            14F4
+MONEY               1506
+MONEY_MSG           15CD
+MONTH_COUNT         1504
+MONTH_MSG           15D7
+NAME                171C
+NAME_ADDRESS        1718
+NEWLINE             14D6
+PAY                 1106
+PRINT_BANNER        13D6
+PRINT_LEVELS        1468
+PRINT_MONEY         1446
+PRINT_MONTH         1424
+PRINT_SHOP          126A
+PRINT_UPGRADES      12D8
+RANDOM_NUMBER       14E4
+RESET_CHANCE        1142
+SHOP                1216
+SHOP_BANNER         15C8
+SHOP_MSG            15A4
 SHOP_TEST           1068
 START               1000
-TRAINING_COST       14CC
-TRAINING_UP         155E
-UPGRADE_AD          10C2
-UPGRADE_LEGAL       10EC
+TRAINING_COST       1584
+TRAINING_UP         160E
+TRY_LAWSUIT         10B0
+UPGRADE_AD          115E
+UPGRADE_LEGAL       1188
