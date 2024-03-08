@@ -2,11 +2,10 @@
 * Title      : Business Tycoon
 * Written by : Karolis Grigaliunas
 * Student No.: C00287940 
-* Date       :  
-* Description: Basic business tycoon where you try get as much money as possible without going bankrupt
+* Description: Basic business tycoon where you try get as much money as possible
     ORG    $1000
 START:
-    
+    ;INITIALIZE
     LEA INCOME_UPGRADE, A2
     LEA LAWSUIT_SUCCESS,    A3
     LEA AD_COST,    A4
@@ -14,7 +13,7 @@ START:
     LEA LEGAL_COST, A6
     
     
-
+    ;CALCULATE BANNER POS FROM NAME LENGHT
     LEA NAME,  A1
     MOVE.B  #14,    D0
     TRAP    #15
@@ -35,41 +34,47 @@ START:
  
     BSR PRINT_BANNER
 
+    ;MAIN SCREEN LOOP
 LOOP:
     BSR HUD
- 
+    ;TAKE INPUT
     MOVE.B  #5, D0
     TRAP #15
-   
+    
     BSR SHOP_TEST    
     BRA LOOP
     
 SHOP_TEST: 
+    ;CHECK INPUT TO SHOP ENTRY 
     CMP #$31,D1
     BEQ PRINT_SHOP
     
-    
+    ;ADD TO MONTH AND TOTAL MONEY
     ADD.W   #$000001, MONTH_COUNT
     MOVE.L  INCOME, D2
     ADD.L   D2   ,MONEY
     MOVEQ.L #0, D2
-    
+    ;CHECK FOR LAWSUIT
     BRA LAWSUIT_TICK
 ADD_CHANCE:
+    ;ADD CHANCE AND RESET TICK
     ADD.B   #1, LAWSUIT_CHANCE
     MOVE.B  #0, D7
     BSR TRY_LAWSUIT
 LAWSUIT_TICK:
+    ;TICK LAWSUIT AND IF CHANCE IS 100
     ADD.B   #1, D7
     MOVE.B  LAWSUIT_CHANCE, D3
     CMP #$64, D3
     BLT CHANCE
     BRA LOOP
 CHANCE:
+    ;CHECK IS HIT LAWSUIT TICK
     CMP #20, D7
     BGE ADD_CHANCE
     BRA LOOP
 TRY_LAWSUIT:
+    ;ATTEMPT LAWSUIT
     BSR RANDOM_NUMBER
     MOVE.B  LAWSUIT_CHANCE, D2
     CMP D2, D1
@@ -77,6 +82,7 @@ TRY_LAWSUIT:
     BRA LOOP
 
 LAWSUIT_SCREEN:
+    ;PRINT LAWSUIT SCREEN
     ;CLEAR SCREEN
     MOVE.W  #$FF00,D1
     MOVE.B  #11, D0 
@@ -90,9 +96,10 @@ LAWSUIT_SCREEN:
     MOVE.B  #13,    D0
     TRAP    #15
     CLR.L   D1
+    ;INPUT
     MOVE.B  #5, D0
     TRAP #15
-
+    ;CHECK INPUT
     CMP #$31, D1
     BEQ FIGHT
 
@@ -104,8 +111,10 @@ LAWSUIT_SCREEN:
     MOVE.B  #11, D0 
     TRAP #15
     CLR.L D1
+    ;LOOP BACK
     BRA LAWSUIT_SCREEN 
 PAY:
+    ;PAY 50%
     MOVE.L  MONEY,  D0
     DIVU.W  #2, D0
     SUB.L  D0, MONEY
@@ -113,27 +122,31 @@ PAY:
     BRA LOOP 
     
 FIGHT:
+    ;RUN CHANCE
     BSR RANDOM_NUMBER
     MOVE.B  (A3), D2
     CMP D2, D1
     BLT FIGHT_LOSE
 
 FIGHT_LOSE:
+    ;LOSE 80% OF MONEY
     MOVE.L  MONEY,  D0
     DIVU    #10,    D0
     MULU    #8, D0
     SUB.L   D0,  MONEY
-    BRA PRINT_BANNER
+    BRA PRINT_BANNER    ;LOOP BACK TO MAIN
+
 RESET_CHANCE:
     CLR.B   LAWSUIT_CHANCE
     MOVE.L  D1, MONEY
     CLR.L   D1
+    ;CHECK IF MAXED COST
     CMP #50000,   (A5)
     BGE SHOP
     MOVE.L  (A5)+,  D1
     BRA SHOP 
 UPGRADE_AD:
-    CMP #10,    AD_LVL
+    CMP #10,    AD_LVL    ;CHECK IF MAXED
     BEQ SHOP
     MOVE.L  (A2)+,  INCOME 
     MOVE.L  D1, MONEY
@@ -144,7 +157,7 @@ UPGRADE_AD:
     CLR.L   D2
     BRA SHOP
 UPGRADE_LEGAL:
-    CMP #7, LEGAL_LVL
+    CMP #7, LEGAL_LVL    ;CHECK IF MAXED
     BEQ SHOP
     MOVE.B  (A3)+,  D4
     MOVE.L  D1, MONEY
@@ -155,6 +168,7 @@ UPGRADE_LEGAL:
     BRA SHOP
     
 EXIT_TEST:
+    ;SHOP INPUT CHECK
     CMP #$31,   D1
     BEQ PRINT_BANNER
     CMP #$32,   D1
@@ -163,9 +177,9 @@ EXIT_TEST:
     BEQ COST_TEST3
     CMP #$34,   D1
     BEQ RESET_CHANCE
-    
     RTS
 COST_TEST2:
+    ;COST TEST FOR AD UPGRADE
     MOVE.L  MONEY,  D1
     MOVE.L  (A4),   D2
     SUB.L   D2, D1
@@ -173,6 +187,7 @@ COST_TEST2:
     BGT UPGRADE_AD
     BRA SHOP
 COST_TEST3:
+    ;COST TEST FOR LEGAL UPGRADE
     MOVE.L  MONEY,  D1
     MOVE.L  (A6),   D2
     SUB.L   D2, D1
@@ -180,30 +195,25 @@ COST_TEST3:
     BGT UPGRADE_LEGAL
     BRA SHOP
 COST_TEST4:
+    ;COST TEST FOR CHANCE RESET
     MOVE.L  MONEY,  D1
     MOVE.L  (A5),   D2
     SUB.L   D2, D1
     TST D1
     BGT RESET_CHANCE
     BRA SHOP 
-
-IS_NEGATIVE:
-    MOVE.W  #$FF00,D1
-    MOVE.B  #11, D0 
-    TRAP #15
-    CLR.L D1
-    
-    BRA SHOP
 SHOP:  
+    ;PRINT THE SHOP UI
     BSR PRINT_MONEY
     BSR PRINT_UPGRADES
     
-    MOVE.B  #5, D0
+    MOVE.B  #5, D0    ;CHECK INPUT
     TRAP #15
     
     BSR EXIT_TEST
     BRA SHOP
 HUD:
+    ;PRINT MAIN SCREEN
     BSR PRINT_MONEY  
     BSR PRINT_MONTH
     BSR PRINT_LEVELS  
@@ -241,7 +251,7 @@ PRINT_SHOP:
     
     LEA SHOP_BANNER,   A1
     MOVE.B  #11,    D0
-    MOVE.W  #$2301, D1
+    MOVE.W  #$2301, D1    ;MOVE CURSOR
     TRAP    #15
     
     MOVE.B  #14,    D0
@@ -252,7 +262,7 @@ PRINT_SHOP:
     TRAP    #15
     
     MOVE.B  #11,    D0
-    MOVE.W  #$001D, D1
+    MOVE.W  #$001D, D1    ;MOVE CURSOR
     TRAP    #15
     
     LEA LINE,   A1
@@ -260,9 +270,8 @@ PRINT_SHOP:
     TRAP    #15
     
     MOVE.B  #11,    D0
-    MOVE.W  #$011E, D1
-    TRAP    #15
-    
+    MOVE.W  #$011E, D1    ;MOVE CURSOR
+    TRAP    #15   
     LEA EXIT_MSG,   A1
     MOVE.B  #14,    D0
     TRAP    #15
@@ -283,7 +292,7 @@ PRINT_UPGRADES:
     
 
     MOVE.B  #11,    D0
-    MOVE.W  #$0006, D1
+    MOVE.W  #$0006, D1    ;MOVE CURSOR
     TRAP    #15
     CLR.L D0  
     CLR.L D1
@@ -296,17 +305,19 @@ PRINT_UPGRADES:
     CLR.L D1
 
     MOVE.B  #11,    D0
-    MOVE.W  #$1E07, D1
+    MOVE.W  #$1E07, D1    ;MOVE CURSOR
     TRAP    #15
     CLR.L D0  
     CLR.L D1
+
     LEA INCOME_AMOUNT,  A1
     MOVE.L  INCOME, D1
     MOVE.B  #17,    D0
     TRAP    #15
+
     ;PRINT LEGAL
     MOVE.B  #11,    D0
-    MOVE.W  #$280A, D1
+    MOVE.W  #$280A, D1    ;MOVE CURSOR
     TRAP    #15
     CLR.L D0  
     CLR.L D1
@@ -317,7 +328,7 @@ PRINT_UPGRADES:
     TRAP    #15
     
     MOVE.B  #11,    D0
-    MOVE.W  #$000B, D1
+    MOVE.W  #$000B, D1    ;MOVE CURSOR
     TRAP    #15
     CLR.L D0  
     CLR.L D1
@@ -330,7 +341,7 @@ PRINT_UPGRADES:
     CLR.L D1
 
     MOVE.B  #11,    D0
-    MOVE.W  #$190C, D1
+    MOVE.W  #$190C, D1    ;MOVE CURSOR
     TRAP    #15
     CLR.L D0  
     CLR.L D1
@@ -342,7 +353,7 @@ PRINT_UPGRADES:
     ;PRINT TRAINING
     
     MOVE.B  #11,    D0
-    MOVE.W  #$270F, D1
+    MOVE.W  #$270F, D1    ;MOVE CURSOR
     TRAP    #15
     CLR.L D0  
     CLR.L D1
@@ -353,7 +364,7 @@ PRINT_UPGRADES:
     TRAP    #15
     
     MOVE.B  #11,    D0
-    MOVE.W  #$0010, D1
+    MOVE.W  #$0010, D1    ;MOVE CURSOR
     TRAP    #15
     CLR.L D0  
     CLR.L D1
