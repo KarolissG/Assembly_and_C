@@ -7,6 +7,7 @@ global _start ;Declared for linker this is declaring _start (entry point)
 section	.text
 _start:	                                 ;linker entry point
 
+
 ;PRINT PROMPT
 	mov	rdx,	msg_length                 ;message length see length equ 64 Bit Register
 
@@ -37,15 +38,23 @@ _start:	                                 ;linker entry point
 ;TAKE INPUT
 	xor	rdi,	rdi			;file descriptor (sdtin)
 	xor	rax,	rax			;clear rax for input
-	mov rsi,	buffer2		;buffer forsecond input
+	mov rsi,	buffer2		;buffer for second input
 	mov rdx,	buffer_size
 	syscall
 
-	mov rdx,	[buffer1]
+	mov	rdx,	0x1
+	mov	rsi,	buffer
+	mov	rdi,	0x1
+	mov	rax,	0x1
+	syscall
+
+;convert to integer
+	mov rdx,	buffer
 	sub rdx,	'0'
-	mov rbx,	[buffer2]
+	mov rbx,	buffer2
 	sub rbx,	'0'
 	call Adder1
+	mov	[result],	rdx
 
 	mov	rdx,	result_lenght
 	mov rsi,	result
@@ -63,8 +72,6 @@ _start:	                                 ;linker entry point
 ; add two numbers
 Adder1:
 	add	rdx,	rbx
-	add	rdx,	'0'
-	mov [result],	rdx
 	ret
 
 
@@ -75,8 +82,7 @@ message db 'Enter Number :',    ;string to be printed
 msg_length equ $-message                  ;length of the string
 sum_msg db 'The sum is :',
 sum_lenght equ $-sum_msg
-buffer db 100
-buffer2	db 100
-buffer_size db 100
-result db 100
-result_lenght equ $-result
+buffer db 64
+buffer2	db 64
+buffer_size db 64
+result db 0
