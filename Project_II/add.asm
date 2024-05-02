@@ -1,12 +1,7 @@
 section .data
     msg1 db "Enter the first number: ", 0
-    msg1_len equ $ - msg1
-
     msg2 db "Enter the second number: ", 0
-    msg2_len equ $ - msg2
-
-    msg_result db "The sum is: ", 0
-    msg_result_len equ $ - msg_result
+    msg_result db "The sum is: %d", 10, 0
 
 section .bss
     num1 resq 1 ; reserve space for the first number (64-bit)
@@ -17,54 +12,32 @@ section .text
     global _start
 
 _start:
-    ; Print "Enter the first number: "
-    mov rdi, 1
-    mov rsi, msg1
-    mov rdx, msg1_len
-    mov rax, 1
-    syscall
+    ; Input first number
+    mov rdi, msg1
+    call printf
+    mov rdi, num1
+    call scanf
 
-    ; Read the first number
-    mov rdi, 0
-    mov rsi, num1
-    mov rdx, 8 ; 64-bit input
-    mov rax, 0
-    syscall
+    ; Input second number
+    mov rdi, msg2
+    call printf
+    mov rdi, num2
+    call scanf
 
-    ; Print "Enter the second number: "
-    mov rdi, 1
-    mov rsi, msg2
-    mov rdx, msg2_len
-    mov rax, 1
-    syscall
-
-    ; Read the second number
-    mov rdi, 0
-    mov rsi, num2
-    mov rdx, 8 ; 64-bit input
-    mov rax, 0
-    syscall
-
-    ; Add the numbers
+    ; Calculate sum
     mov rax, [num1]
     add rax, [num2]
     mov [sum], rax
 
-    ; Print the result
-    mov rdi, 1
-    mov rsi, msg_result
-    mov rdx, msg_result_len
-    mov rax, 1
-    syscall
-
-    ; Print the sum
-    mov rdi, 1
+    ; Output the sum
+    mov rdi, msg_result
     mov rsi, [sum]
-    mov rdx, 8 ; 64-bit output
-    mov rax, 1
-    syscall
+    call printf
 
     ; Exit
     mov rax, 60
     xor rdi, rdi
     syscall
+
+extern printf
+extern scanf
