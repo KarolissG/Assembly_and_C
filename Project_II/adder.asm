@@ -55,6 +55,58 @@ Adder1:
 	add	num1,	num2
 	ret
 
+; Subroutine to convert ASCII string to integer
+ascii_to_int:
+    xor rcx, rcx                       ; Clear rcx for loop counter
+    xor rax, rax                       ; Clear rax for result
+.ascii_to_int_loop:
+    movzx rbx, byte [rdi + rcx]       ; Load next character into rbx
+    test rbx, rbx                      ; Check for null terminator
+    jz .ascii_to_int_done              ; If null terminator, done
+    sub rbx, '0'                       ; Convert ASCII to integer
+    imul rax, 10                       ; Multiply current value by 10
+    add rax, rbx                       ; Add current digit
+    inc rcx                            ; Move to next character
+    jmp .ascii_to_int_loop
+.ascii_to_int_done:
+    ret
+
+; Subroutine to print a number
+print_num:
+    ; Convert number to string
+    mov rsi, result_str
+    call int_to_ascii
+    ; Print the string
+    mov rdx, result_str_length
+    mov rbx, 1                         ; File descriptor (stdout)
+    mov rax, 1                         ; System call number (sys_write)
+    syscall
+    ret
+
+; Subroutine to convert integer to ASCII string
+int_to_ascii:
+    xor rdx, rdx                       ; Clear rdx for loop counter
+    mov rdi, rsi                       ; Destination buffer
+    add rdi, result_str_length         ; Move to end of buffer
+    mov rax, [rsi]                     ; Load the number
+    test rax, rax                      ; Check for zero
+    jz .int_to_ascii_single_digit      ; If zero, handle separately
+    ; Convert each digit to ASCII
+.int_to_ascii_loop:
+    mov rcx, 10                        ; Divisor
+    xor rdx, rdx                       ; Clear remainder
+    div rcx                            ; Divide by 10
+    add dl, '0'                        ; Convert remainder to ASCII
+    dec rdi                            ; Move to previous position in buffer
+    mov [rdi], dl                      ; Store ASCII digit
+    test rax, rax                      ; Check for zero quotient
+    jnz .int_to_ascii_loop             ; If not zero, continue loop
+    ret
+.int_to_ascii_single_digit:
+    mov dl, '0'                        ; Convert zero to ASCII
+    dec rdi                            ; Move to previous position in buffer
+    mov [rdi], dl                      ; Store ASCII digit
+    ret
 
 ; DATA SECTION
 section	.data
