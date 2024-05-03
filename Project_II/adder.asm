@@ -21,18 +21,37 @@ _start:	                                 ;linker entry point
 	mov	rsi,	num2
 	syscall
 
-	call Adder1
-
-	mov	rdx,	64
-	mov	rsi,	num1
+	mov	rdx,	sum_lenght
+	mov	rsi,	sum_msg
 	mov	rbx,	0x01
 	mov	rax,	0x01
 	syscall
-;NEWLINE
-	mov	rax,	1
-	mov	rdi,	1
-	mov	rsi,	newline
-	mov	rdx,	1
+
+	call	Adder1
+
+	mov	rdi,	num1
+	call	ascii_to_int
+	mov	[num1],	rax
+	mov	rdi,	num2
+	call	ascii_to_int
+	mov	[num2],	rax
+
+	call print_num
+
+;PRINT PROMPT
+	call PROMPT
+;TAKE INPUT
+	xor	rbx,	rbx			;file descriptor (sdtin)
+	xor	rax,	rax			;clear rax for input
+	mov	rsi,	num1		;buffer foir first input
+	syscall
+
+;PRINT PROMPT
+	call PROMPT
+;TAKE INPUT
+	xor	rbx,	rbx			;file descriptor (sdtin)
+	xor	rax,	rax			;clear rax for i
+	mov	rsi,	num2
 	syscall
 
 ; Exit
@@ -42,17 +61,16 @@ _start:	                                 ;linker entry point
 
 PROMPT:
 	mov	rdx,	msg_length                 ;message length see length equ 64 Bit Register
-
 	mov	rsi,	message                    ;message 64 Bit Register
-
 	mov	rbx,	0x01                       ;file descriptor (stdout) 64 Bit Register
-
 	mov	rax,  	0x01                        ;system call number (sys_write) 64 Bit Register
 	syscall                                ;call kernel 64 bit System
 	ret
 ; add two numbers
 Adder1:
-	add	num1,	num2
+	mov	rax,	[num1]
+	add	rax,	[num2]
+	mov	[result],	rax
 	ret
 
 ; Subroutine to convert ASCII string to integer
@@ -65,23 +83,30 @@ ascii_to_int:
     jz .ascii_to_int_done              ; If null terminator, done
     sub rbx, '0'                       ; Convert ASCII to integer
     imul rax, 10                       ; Multiply current value by 10
-    add rax, rbx                       ; Add current digit
-    inc rcx                            ; Move to next character
-    jmp .ascii_to_int_loop
+	add rax, rbx                       ; Add current digit
+	inc rcx                            ; Move to next character
+	jmp .ascii_to_int_loop
 .ascii_to_int_done:
-    ret
+	ret
 
 ; Subroutine to print a number
 print_num:
     ; Convert number to string
-    mov rsi, result_str
-    call int_to_ascii
+	mov rsi, result_str
+	call int_to_ascii
     ; Print the string
-    mov rdx, result_str_length
-    mov rbx, 1                         ; File descriptor (stdout)
-    mov rax, 1                         ; System call number (sys_write)
-    syscall
-    ret
+	mov rdx, result_str_length
+	mov rbx, 1                         ; File descriptor (stdout)
+	mov rax, 1                         ; System call number (sys_write)
+	syscall
+;NEWLINE
+	mov	rax,	0x01
+	mov	rdi,	0x01
+	mov	rsi,	newline
+	mov	rdx,	0x01
+	syscall
+
+	ret
 
 ; Subroutine to convert integer to ASCII string
 int_to_ascii:
@@ -118,9 +143,10 @@ sum_lenght equ $-sum_msg
 buffer db 16
 buffer2	db 16
 buffer_size db 16
-result db 0
-newline db 10
-
+newline db 0x0A
+result_str db 20
+result_str_length equ $-result_str
 section .bss
 	num1	resb	64
 	num2	resb	64
+	result	resq	1
