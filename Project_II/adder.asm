@@ -21,39 +21,22 @@ _start:	                                 ;linker entry point
 	mov	rsi,	num2
 	syscall
 
-	mov	rdx,	sum_lenght
-	mov	rsi,	sum_msg
-	mov	rbx,	0x01
-	mov	rax,	0x01
-	syscall
-
-	call	Adder1
-
 	mov	rdi,	num1
 	call	ascii_to_int
 	mov	[num1],	rax
 	mov	rdi,	num2
 	call	ascii_to_int
 	mov	[num2],	rax
+	call	Adder1
 
+	mov	rdx,	sum_lenght
+	mov	rsi,	sum_msg
+	mov	rbx,	1
+	mov	rax,	1
+	syscall
+
+	mov	rsi,	result
 	call print_num
-
-;PRINT PROMPT
-	call PROMPT
-;TAKE INPUT
-	xor	rbx,	rbx			;file descriptor (sdtin)
-	xor	rax,	rax			;clear rax for input
-	mov	rsi,	num1		;buffer foir first input
-	syscall
-
-;PRINT PROMPT
-	call PROMPT
-;TAKE INPUT
-	xor	rbx,	rbx			;file descriptor (sdtin)
-	xor	rax,	rax			;clear rax for i
-	mov	rsi,	num2
-	syscall
-
 ; Exit
 	mov	rax,    0x3c                       ;system call number (sys_exit) 64 Bit Register
 	mov	rdi,    0x0                        ;return status 64 Bit Register
@@ -99,13 +82,6 @@ print_num:
 	mov rbx, 1                         ; File descriptor (stdout)
 	mov rax, 1                         ; System call number (sys_write)
 	syscall
-;NEWLINE
-	mov	rax,	0x01
-	mov	rdi,	0x01
-	mov	rsi,	newline
-	mov	rdx,	0x01
-	syscall
-
 	ret
 
 ; Subroutine to convert integer to ASCII string
@@ -140,10 +116,7 @@ message db 'Enter Number :',    ;string to be printed
 msg_length equ $-message                  ;length of the string
 sum_msg db 'The sum is :',
 sum_lenght equ $-sum_msg
-buffer db 16
-buffer2	db 16
-buffer_size db 16
-newline db 0x0A
+newline db 10
 result_str db 20
 result_str_length equ $-result_str
 section .bss
