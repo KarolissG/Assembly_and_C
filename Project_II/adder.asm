@@ -21,6 +21,11 @@ _start:	                                 ;linker entry point
 	mov	rsi,	num2
 	syscall
 
+	mov	rdx,	sum_lenght
+	mov	rsi,	sum_msg
+	mov	rbx,	1
+	syscall
+
 	mov	rdi,	num1
 	call	ascii_to_int
 	mov	[num1],	rax
@@ -28,12 +33,6 @@ _start:	                                 ;linker entry point
 	call	ascii_to_int
 	mov	[num2],	rax
 	call	Adder1
-
-	mov	rdx,	sum_lenght
-	mov	rsi,	sum_msg
-	mov	rbx,	1
-	mov	rax,	1
-	syscall
 
 	mov	rsi,	result
 	call print_num
