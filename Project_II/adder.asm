@@ -24,6 +24,7 @@ _start:	                                 ;linker entry point
 	mov	rdx,	sum_lenght
 	mov	rsi,	sum_msg
 	mov	rbx,	1
+	mov	rax,	1
 	syscall
 
 	mov	rdi,	num1
@@ -32,9 +33,9 @@ _start:	                                 ;linker entry point
 	mov	rdi,	num2
 	call	ascii_to_int
 	mov	[num2],	rax
-	call	Adder1
 
 	mov	rsi,	result
+	call	Adder1
 	call print_num
 ; Exit
 	mov	rax,    0x3c                       ;system call number (sys_exit) 64 Bit Register
